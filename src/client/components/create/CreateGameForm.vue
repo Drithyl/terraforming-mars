@@ -572,6 +572,7 @@ export default (Vue as WithRefs<Refs>).extend({
         BoardName.AMAZONIS,
         BoardName.TERRA_CIMMERIA,
         BoardName.VASTITAS_BOREALIS,
+        BoardName.BIG,
         RandomBoardOption.ALL,
       ],
       seed: Math.random(),
@@ -849,6 +850,8 @@ export default (Vue as WithRefs<Refs>).extend({
         return 'create-game-board-hexagon create-game-terra-cimmeria';
       } else if (boardName === BoardName.VASTITAS_BOREALIS) {
         return 'create-game-board-hexagon create-game-vastitas-borealis';
+      } else if (boardName === BoardName.BIG) {
+        return 'create-game-board-hexagon create-game-big';
       } else {
         return 'create-game-board-hexagon create-game-random';
       }
@@ -889,6 +892,7 @@ export default (Vue as WithRefs<Refs>).extend({
         [BoardName.VASTITAS_BOREALIS]: 'vastitas-borealis',
         [BoardName.AMAZONIS]: 'amazonis-planatia',
         [BoardName.TERRA_CIMMERIA]: 'terra-cimmeria',
+        [BoardName.BIG]: 'big',
         [RandomBoardOption.OFFICIAL]: '',
         [RandomBoardOption.ALL]: '',
       };

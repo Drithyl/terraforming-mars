@@ -38,11 +38,11 @@
             </div>
 
             <div class="global-numbers-oceans">
-              <span v-if="this.oceans_count === this.constants.MAX_OCEAN_TILES">
+              <span v-if="this.oceans_count === this.maxOceanTiles">
                 <img width="26" src="assets/misc/circle-checkmark.png" class="board-ocean-checkmark" :alt="$t('Completed!')">
               </span>
               <span v-else>
-                {{this.oceans_count}}/{{this.constants.MAX_OCEAN_TILES}}
+                {{this.oceans_count}}/{{this.maxOceanTiles}}
               </span>
             </div>
 
@@ -453,6 +453,18 @@ export default Vue.extend({
     temperature: {
       type: Number,
     },
+    maxOceanTiles: {
+      type: Number,
+    },
+    maxOxygenLevel: {
+      type: Number,
+    },
+    minTemperature: {
+      type: Number,
+    },
+    maxVenusScale: {
+      type: Number,
+    },
     aresExtension: {
       type: Boolean,
     },
@@ -507,19 +519,19 @@ export default Vue.extend({
       switch (targetParameter) {
       case 'oxygen':
         startValue = constants.MIN_OXYGEN_LEVEL;
-        endValue = constants.MAX_OXYGEN_LEVEL;
+        endValue = this.maxOxygenLevel;
         step = 1;
         curValue = this.oxygen_level;
         break;
       case 'temperature':
-        startValue = constants.MIN_TEMPERATURE;
+        startValue = this.minTemperature;
         endValue = constants.MAX_TEMPERATURE;
         step = 2;
         curValue = this.temperature;
         break;
       case 'venus':
         startValue = constants.MIN_VENUS_SCALE;
-        endValue = constants.MAX_VENUS_SCALE;
+        endValue = this.maxVenusScale;
         step = 2;
         curValue = this.venusScaleLevel;
         break;
@@ -607,11 +619,11 @@ export default Vue.extend({
     },
     oceansValue() {
       const oceans_count = this.oceans_count || 0;
-      const leftover = constants.MAX_OCEAN_TILES - oceans_count;
+      const leftover = maxOceanTiles - oceans_count;
       if (leftover === 0) {
         return '<img width="26" src="assets/misc/circle-checkmark.png" class="board-ocean-checkmark" :alt="$t(\'Completed!\')">';
       } else {
-        return `${oceans_count}/${constants.MAX_OCEAN_TILES}`;
+        return `${oceans_count}/${maxOceanTiles}`;
       }
     },
     getGameBoardClassName(): string {

@@ -15,7 +15,6 @@
 <script lang="ts">
 
 import Vue from 'vue';
-import {MAX_OCEAN_TILES, MAX_OXYGEN_LEVEL, MAX_TEMPERATURE, MAX_VENUS_SCALE} from '@/common/constants';
 import {GlobalParameter} from '@/common/GlobalParameter';
 
 // This component is only configured for offial global parameters, and not the moon global parameters.
@@ -26,10 +25,10 @@ type BaseGlobalParameter = Exclude<
   GlobalParameter.MOON_LOGISTICS_RATE>;
 
 const attributes: Record<BaseGlobalParameter, {max: number, title: string, iconClass: string}> = {
-  [GlobalParameter.TEMPERATURE]: {max: MAX_TEMPERATURE, title: 'Temperature', iconClass: 'temperature-tile'},
-  [GlobalParameter.OXYGEN]: {max: MAX_OXYGEN_LEVEL, title: 'Oxygen Level', iconClass: 'oxygen-tile'},
-  [GlobalParameter.OCEANS]: {max: MAX_OCEAN_TILES, title: 'Oceans', iconClass: 'ocean-tile'},
-  [GlobalParameter.VENUS]: {max: MAX_VENUS_SCALE, title: 'Venus Scale', iconClass: 'venus-tile'},
+  [GlobalParameter.TEMPERATURE]: {title: 'Temperature', iconClass: 'temperature-tile'},
+  [GlobalParameter.OXYGEN]: {title: 'Oxygen Level', iconClass: 'oxygen-tile'},
+  [GlobalParameter.OCEANS]: {title: 'Oceans', iconClass: 'ocean-tile'},
+  [GlobalParameter.VENUS]: {title: 'Venus Scale', iconClass: 'venus-tile'},
 };
 
 export default Vue.extend({
@@ -44,7 +43,21 @@ export default Vue.extend({
   },
   computed: {
     isMax(): boolean {
-      return this.value === attributes[this.param].max;
+      let max: number;
+
+      if (this.param === GlobalParameter.TEMPERATURE) {
+        max = this.game.maxTemperature;
+      } else if (this.param === GlobalParameter.OXYGEN) {
+        max = this.game.maxOxygenLevel;
+      } else if (this.param === GlobalParameter.OCEANS) {
+        max = this.game.maxOceanTiles;
+      } else if (this.param === GlobalParameter.VENUS) {
+        max = this.game.maxVenusScale;
+      } else {
+        console.error('Global Parameter name does not match any of the four parameters');
+      }
+
+      return this.value === max;
     },
     title(): string {
       return attributes[this.param].title;

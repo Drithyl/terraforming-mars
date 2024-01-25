@@ -1,4 +1,5 @@
 import * as constants from '../common/constants';
+import * as globalParameterCalculator from '@/common/GlobalParameterCalculator';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
 import {Board} from './boards/Board';
 import {BoardName} from '../common/boards/BoardName';
@@ -1398,12 +1399,12 @@ export class Game implements IGame, Logger {
   }
 
   public canAddOcean(): boolean {
-    return this.board.getOceanSpaces().length < constants.MAX_OCEAN_TILES;
+    return this.board.getOceanSpaces().length < globalParameterCalculator.getMaxOceanTiles(this);
   }
 
   public canRemoveOcean(): boolean {
     const count = this.board.getOceanSpaces().length;
-    return count > 0 && count < constants.MAX_OCEAN_TILES;
+    return count > 0 && count < globalParameterCalculator.getMaxOceanTiles(this);
   }
 
   public addOcean(player: IPlayer, space: Space): void {

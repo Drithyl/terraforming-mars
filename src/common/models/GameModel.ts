@@ -32,6 +32,10 @@ export type GameModel = {
   moon: MoonModel | undefined;
   oceans: number;
   oxygenLevel: number;
+  maxOceanTiles: number;
+  maxOxygenLevel: number;
+  maxTemperature: number;
+  maxVenusScale: number;
   passedPlayers: Array<Color>;
   pathfinders: PathfindersModel | undefined;
   phase: Phase;
