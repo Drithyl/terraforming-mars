@@ -19,6 +19,7 @@ import {message} from '../logs/MessageBuilder';
 import {LogHelper} from '../LogHelper';
 import {SelectPaymentDeferred} from '../deferredActions/SelectPaymentDeferred';
 import {Phase} from '../../common/Phase';
+import {Units} from '../../common/Units';
 
 export class UnderworldExpansion {
   private constructor() {}
@@ -257,7 +258,7 @@ export class UnderworldExpansion {
       player.production.add(Resource.PLANTS, 1, {log: true});
       break;
     case 'titaniumandplant':
-      player.stock.addUnits({plants: 1, titanium: 1}, {log: true});
+      player.stock.addUnits(Units.of({plants: 1, titanium: 1}), {log: true});
       break;
     case 'energy1production':
       player.production.add(Resource.ENERGY, 1, {log: true});
@@ -294,10 +295,10 @@ export class UnderworldExpansion {
     }
   }
 
+  // TODO(kberg): turn into a deferred action?
   public static maybeBlockAttack(target: IPlayer, perpetrator: IPlayer, cb: (proceed: boolean) => PlayerInput | undefined): PlayerInput | undefined {
-    if (target.game.gameOptions.underworldExpansion === false) {
-      cb(true);
-      return undefined;
+    if (target.game.gameOptions.underworldExpansion === false || target === perpetrator) {
+      return cb(true);
     }
     const privateMilitaryContractor = target.playedCards.find((card) => card.name === CardName.PRIVATE_MILITARY_CONTRACTOR);
     const militaryContractorFighters = privateMilitaryContractor?.resourceCount ?? 0;
@@ -355,41 +356,42 @@ export class UnderworldExpansion {
     }
   }
 
-  //   static removeAllUnclaimedTokens(game: IGame) {
-  //     if (game.underworldData === undefined) {
-  //       return;
-  //     }
-  //     for (const space of UnderworldExpansion.identifiedSpaces(game)) {
-  //       if (space.undergroundResources !== undefined && space.excavator === undefined) {
-  //         game.underworldData.tokens.push(space.undergroundResources);
-  //         space.undergroundResources = undefined;
-  //       }
-  //     }
-  //     inplaceShuffle(game.underworldData.tokens, game.rng);
-  //     game.log('All unidentified underground resources have been shuffled back into the pile.');
-  //   }
+  static removeAllUnclaimedTokens(game: IGame) {
+    if (game.underworldData === undefined) {
+      return;
+    }
+    for (const space of UnderworldExpansion.identifiedSpaces(game)) {
+      if (space.undergroundResources !== undefined && space.excavator === undefined) {
+        game.underworldData.tokens.push(space.undergroundResources);
+        space.undergroundResources = undefined;
+      }
+    }
+    inplaceShuffle(game.underworldData.tokens, game.rng);
+    game.log('All unidentified underground resources have been shuffled back into the pile.');
+  }
 
-  //   static removeUnclaimedToken(game: IGame, space: Space) {
-  //     if (game.underworldData === undefined) {
-  //       return;
-  //     }
-  //     if (space.undergroundResources !== undefined && space.excavator === undefined) {
-  //       game.underworldData.tokens.push(space.undergroundResources);
-  //       space.undergroundResources = undefined;
-  //     } else {
-  //       throw new Error('Cannot reclaim that space');
-  //     }
-  //     inplaceShuffle(game.underworldData.tokens, game.rng);
-  //   }
+  static removeUnclaimedToken(game: IGame, space: Space) {
+    if (game.underworldData === undefined) {
+      return;
+    }
+    if (space.undergroundResources !== undefined && space.excavator === undefined) {
+      game.underworldData.tokens.push(space.undergroundResources);
+      space.undergroundResources = undefined;
+    } else {
+      throw new Error('Cannot reclaim that space');
+    }
+    inplaceShuffle(game.underworldData.tokens, game.rng);
+  }
 
+  /** Add the set of tokens to the pool, and then shuffle the pool */
+  static addTokens(game: IGame, tokens: Array<UndergroundResourceToken>) {
+    if (game.underworldData === undefined) {
+      return;
+    }
+    game.underworldData.tokens.push(...tokens);
+    inplaceShuffle(game.underworldData.tokens, game.rng);
+  }
 
-  //   static addTokens(game: IGame, tokens: Array<UndergroundResourceToken>) {
-  //     if (game.underworldData === undefined) {
-  //       return;
-  //     }
-  //     game.underworldData.tokens.push(...tokens);
-  //     inplaceShuffle(game.underworldData.tokens, game.rng);
-  //   }
   static excavationMarkerCount(player: IPlayer): number {
     return this.excavatedSpaces(player).length;
   }

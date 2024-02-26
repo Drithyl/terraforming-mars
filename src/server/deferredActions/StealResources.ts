@@ -6,7 +6,6 @@ import {DeferredAction, Priority} from './DeferredAction';
 import {CardName} from '../../common/cards/CardName';
 import {Message} from '../../common/logs/Message';
 import {message} from '../logs/MessageBuilder';
-import {UnderworldExpansion} from '../underworld/UnderworldExpansion';
 
 export class StealResources extends DeferredAction {
   constructor(
@@ -25,7 +24,7 @@ export class StealResources extends DeferredAction {
       return undefined;
     }
 
-    let candidates: Array<IPlayer> = this.player.game.getPlayers().filter((p) => p.id !== this.player.id && p.stock.get(this.resource) > 0);
+    let candidates: Array<IPlayer> = this.player.getOpponents().filter((p) => p.stock.get(this.resource) > 0);
     if (this.resource === Resource.PLANTS) {
       candidates = candidates.filter((p) => !p.plantsAreProtected());
     }
@@ -49,13 +48,13 @@ export class StealResources extends DeferredAction {
         message('Steal ${0} ${1} from ${2}', (b) => b.number(qtyToSteal).string(this.resource).player(target)),
         'Steal')
         .andThen(() => {
-          target.defer(UnderworldExpansion.maybeBlockAttack(target, this.player, (proceed) => {
+          target.maybeBlockAttack(this.player, (proceed) => {
             if (proceed) {
               target.stock.deduct(this.resource, qtyToSteal, {log: true, from: this.player, stealing: true});
               this.player.stock.add(this.resource, qtyToSteal);
             }
             return undefined;
-          }));
+          });
           return undefined;
         });
     });

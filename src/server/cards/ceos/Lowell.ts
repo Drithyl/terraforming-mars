@@ -37,9 +37,9 @@ export class Lowell extends CeoCard {
     this.isDisabled = true;
     const game = player.game;
     let ceosDrawn: Array<ICeoCard> = [
-      game.ceoDeck.draw(game),
-      game.ceoDeck.draw(game),
-      game.ceoDeck.draw(game),
+      game.ceoDeck.drawLegacy(game),
+      game.ceoDeck.drawLegacy(game),
+      game.ceoDeck.drawLegacy(game),
     ];
 
     // TODO(d-little): This is not being tested, but currently every CEO is always playable
@@ -64,7 +64,8 @@ export class Lowell extends CeoCard {
         // Add Lowell to Discard pile
         game.ceoDeck.discard(this);
         // Play the new CEO
-        return player.playCard(chosenCeo);
+        player.playCard(chosenCeo);
+        return undefined;
       });
   }
 }

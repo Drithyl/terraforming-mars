@@ -8,7 +8,7 @@ import {Tag} from '../../common/cards/Tag';
 import {CanAffordOptions, IPlayer} from '../IPlayer';
 import {TRSource} from '../../common/cards/TRSource';
 import {Units} from '../../common/Units';
-import {DynamicTRSource} from './ICard';
+import {DynamicTRSource, ICard} from './ICard';
 import {CardRenderDynamicVictoryPoints} from './render/CardRenderDynamicVictoryPoints';
 import {CardRenderItemType} from '../../common/cards/render/CardRenderItemType';
 import {IVictoryPoints} from '../../common/cards/IVictoryPoints';
@@ -26,6 +26,7 @@ import {CardRequirementDescriptor} from '../../common/cards/CardRequirementDescr
 import {asArray} from '../../common/utils/utils';
 import {YesAnd} from './requirements/CardRequirement';
 import {GlobalParameter} from '../../common/GlobalParameter';
+import {Warning} from '../../common/cards/Warning';
 
 /**
  * Cards that do not need a cost attribute.
@@ -54,9 +55,9 @@ type SharedProperties = {
   requirements?: CardRequirementsDescriptor;
   name: CardName;
   resourceType?: CardResource;
+  protectedResources?: boolean;
   startingMegaCredits?: number;
   tags?: Array<Tag>;
-  tilesBuilt?: Array<TileType>,
   tr?: TRSource | DynamicTRSource,
   victoryPoints?: number | 'special' | IVictoryPoints,
 }
@@ -66,12 +67,14 @@ type InternalProperties = SharedProperties & {
   reserveUnits?: Units,
   requirements: Array<CardRequirementsDescriptor>
   compiledRequirements: CardRequirements;
+  tilesBuilt: ReadonlyArray<TileType>,
 }
 
 /* External representation of card properties. */
 export type StaticCardProperties = SharedProperties & {
   reserveUnits?: Partial<Units>,
   requirements?: OneOrArray<CardRequirementDescriptor>,
+  tilesBuilt?: ReadonlyArray<TileType>,
 }
 
 const cardProperties = new Map<CardName, InternalProperties>();
@@ -95,8 +98,10 @@ const cardProperties = new Map<CardName, InternalProperties>();
  * be custom-written for each card, _no_ common behavior should be custom-written for
  * each card, either.
  */
-export abstract class Card {
+export abstract class Card implements ICard {
   protected readonly properties: InternalProperties;
+  public resourceCount = 0;
+  public warnings = new Set<Warning>();
 
   private internalize(external: StaticCardProperties): InternalProperties {
     const name = external.name;
@@ -115,18 +120,36 @@ export abstract class Card {
       validateBehavior(external.behavior);
       validateBehavior(external.firstAction);
       validateBehavior(external.action);
+      Card.validateTilesBuilt(external);
     } catch (e) {
       throw new Error(`Cannot validate ${name}: ${e}`);
     }
 
     const translatedRequirements = asArray(external.requirements ?? []).map((req) => populateCount(req));
     const compiledRequirements = CardRequirements.compile(translatedRequirements);
+    const tilesBuilt = [...external.tilesBuilt ?? []];
+    if (external.behavior?.tile?.type !== undefined) {
+      tilesBuilt.push(external.behavior?.tile.type);
+    }
+    if (external.behavior?.moon?.tile?.type !== undefined) {
+      tilesBuilt.push(external.behavior.moon.tile.type);
+    }
+    if (external.behavior?.moon?.habitatTile !== undefined) {
+      tilesBuilt.push(TileType.MOON_HABITAT);
+    }
+    if (external.behavior?.moon?.mineTile !== undefined) {
+      tilesBuilt.push(TileType.MOON_MINE);
+    }
+    if (external.behavior?.moon?.roadTile !== undefined) {
+      tilesBuilt.push(TileType.MOON_ROAD);
+    }
 
     const internal: InternalProperties = {
       ...external,
       reserveUnits: external.reserveUnits === undefined ? undefined : Units.of(external.reserveUnits),
       requirements: translatedRequirements,
       compiledRequirements: compiledRequirements,
+      tilesBuilt: tilesBuilt,
     };
     return internal;
   }
@@ -140,7 +163,7 @@ export abstract class Card {
     }
     this.properties = internal;
   }
-  public resourceCount = 0;
+
   public get adjacencyBonus() {
     return this.properties.adjacencyBonus;
   }
@@ -174,6 +197,9 @@ export abstract class Card {
   public get resourceType() {
     return this.properties.resourceType;
   }
+  public get protectedResources() {
+    return this.properties.protectedResources;
+  }
   public get startingMegaCredits() {
     return this.properties.startingMegaCredits === undefined ? 0 : this.properties.startingMegaCredits;
   }
@@ -192,8 +218,8 @@ export abstract class Card {
   public get victoryPoints(): number | 'special' | IVictoryPoints | undefined {
     return this.properties.victoryPoints;
   }
-  public get tilesBuilt(): Array<TileType> {
-    return this.properties.tilesBuilt || [];
+  public get tilesBuilt(): ReadonlyArray<TileType> {
+    return this.properties.tilesBuilt;
   }
   public canPlay(player: IPlayer, canAffordOptions?: CanAffordOptions): boolean | YesAnd {
     let yesAnd: YesAnd | undefined = undefined;
@@ -344,6 +370,26 @@ export abstract class Card {
       }
     } else {
       throw new Error('Unknown VPs defined');
+    }
+  }
+
+  private static validateTilesBuilt(properties: StaticCardProperties) {
+    if (properties.tilesBuilt !== undefined) {
+      if (properties.behavior?.tile?.type !== undefined) {
+        throw new Error('tilesBuilt and behavior.tile.tileType both defined: ' + properties.name);
+      }
+      if (properties.behavior?.moon?.tile?.type !== undefined) {
+        throw new Error('tilesBuilt and behavior.moon.tile.tileType both defined: ' + properties.name);
+      }
+      if (properties.behavior?.moon?.habitatTile !== undefined) {
+        throw new Error('tilesBuilt and behavior.moon.habitatTile both defined: ' + properties.name);
+      }
+      if (properties.behavior?.moon?.mineTile !== undefined) {
+        throw new Error('tilesBuilt and behavior.moon.mineTile both defined: ' + properties.name);
+      }
+      if (properties.behavior?.moon?.roadTile !== undefined) {
+        throw new Error('tilesBuilt and behavior.moon.roadTile both defined: ' + properties.name);
+      }
     }
   }
 

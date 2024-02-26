@@ -20,6 +20,7 @@ import {TestPlayer} from './TestPlayer';
 import {PartyName} from '../src/common/turmoil/PartyName';
 import {IPlayer} from '../src/server/IPlayer';
 import {CardRequirements} from '../src/server/cards/requirements/CardRequirements';
+import {Warning} from '../src/common/cards/Warning';
 
 // Returns the oceans created during this operation which may not reflect all oceans.
 export function maxOutOceans(player: IPlayer, toValue: number = 0): Array<Space> {
@@ -130,7 +131,9 @@ export function formatMessage(message: Message | string): string {
   return Log.applyData(message, (datum) => datum.value);
 }
 
-export function testRedsCosts(cb: () => CanPlayResponse, player: IPlayer, initialMegacredits: number, passingDelta: number) {
+// Run a few tests to see that a canPlay or canAct behaves correctly in the face of reds costs.
+// canAct is used to identify if the action is canAct, which returns different results from canPlay. At the moment.
+export function testRedsCosts(cb: () => CanPlayResponse, player: IPlayer, initialMegacredits: number, passingDelta: number, canAct: boolean = false) {
   const turmoil = Turmoil.getTurmoil(player.game);
   turmoil.rulingParty = new Greens();
   PoliticalAgendas.setNextAgenda(turmoil, player.game);
@@ -141,7 +144,11 @@ export function testRedsCosts(cb: () => CanPlayResponse, player: IPlayer, initia
   player.megaCredits = initialMegacredits + passingDelta - 1;
   expect(cb(), 'Reds in power, not enough money').is.false;
   player.megaCredits = initialMegacredits + passingDelta;
-  expect(cb(), 'Reds in power, enough money').is.true;
+  if (passingDelta > 0 && canAct === false) {
+    expect(cb(), 'Reds in power, enough money').deep.eq({redsCost: passingDelta});
+  } else {
+    expect(cb(), 'Reds in power, enough money').is.true;
+  }
 }
 
 class FakeCard implements IProjectCard {
@@ -149,6 +156,7 @@ class FakeCard implements IProjectCard {
   public cost = 0;
   public tags = [];
   public requirements = [];
+  public warnings = new Set<Warning>();
   public canPlay(player: IPlayer) {
     if (this.requirements.length === 0) {
       return true;
@@ -167,9 +175,10 @@ class FakeCard implements IProjectCard {
   public type = CardType.ACTIVE;
   public metadata = {};
   public resourceCount = 0;
+  public tilesBuilt = [];
 }
 
-export function fakeCard(attrs: Partial<IProjectCard>): IProjectCard {
+export function fakeCard(attrs: Partial<IProjectCard> = {}): IProjectCard {
   const card = new FakeCard();
   Object.assign(card, attrs);
   return card;

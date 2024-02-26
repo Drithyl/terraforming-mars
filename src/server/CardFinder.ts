@@ -5,7 +5,7 @@ import {CardName} from '../common/cards/CardName';
 import {ICorporationCard} from './cards/corporation/ICorporationCard';
 import {IPreludeCard} from './cards/prelude/IPreludeCard';
 import {ICeoCard} from './cards/ceos/ICeoCard';
-import {ALL_MODULE_MANIFESTS} from './cards/AllCards';
+import {ALL_MODULE_MANIFESTS} from './cards/AllManifests';
 
 const CARD_RENAMES = new Map<string, CardName>([
   // When renaming a card, add the old name here (like the example below), and add a TODO (like the example below)
@@ -13,8 +13,12 @@ const CARD_RENAMES = new Map<string, CardName>([
 
   // TODO(yournamehere): remove after 2021-04-05
   // ['Earth Embasy', CardName.EARTH_EMBASSY],
+
+  // TODO(kberg): remove after 2024-04-01
+  ['Hectate Speditions', CardName.HECATE_SPEDITIONS],
 ]);
 
+// TODO(kberg): This doesn't need to be a class.
 export class CardFinder {
   private getCard<T extends ICard>(cardName: CardName, cardManifestNames: Array<keyof ModuleManifest>): T | undefined {
     const standardizedCardName = CARD_RENAMES.get(cardName) || cardName;

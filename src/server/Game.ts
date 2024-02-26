@@ -2,7 +2,6 @@ import * as constants from '../common/constants';
 import * as globalParameterCalculator from '@/common/GlobalParameterCalculator';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
 import {Board} from './boards/Board';
-import {BoardName} from '../common/boards/BoardName';
 import {CardFinder} from './CardFinder';
 import {CardName} from '../common/cards/CardName';
 import {CardType} from '../common/cards/CardType';
@@ -31,7 +30,7 @@ import {PlayerId, GameId, SpectatorId, SpaceId} from '../common/Types';
 import {PlayerInput} from './PlayerInput';
 import {CardResource} from '../common/CardResource';
 import {Resource} from '../common/Resource';
-import {AndThen, DeferredAction, Priority, SimpleDeferredAction} from './deferredActions/DeferredAction';
+import {AndThen, DeferredAction, Priority} from './deferredActions/DeferredAction';
 import {DeferredActionsQueue} from './deferredActions/DeferredActionsQueue';
 import {SelectPaymentDeferred} from './deferredActions/SelectPaymentDeferred';
 import {SelectInitialCards} from './inputs/SelectInitialCards';
@@ -40,7 +39,6 @@ import {RemoveColonyFromGame} from './deferredActions/RemoveColonyFromGame';
 import {GainResources} from './deferredActions/GainResources';
 import {SerializedGame} from './SerializedGame';
 import {SpaceBonus} from '../common/boards/SpaceBonus';
-import {SpaceName} from './SpaceName';
 import {TileType} from '../common/TileType';
 import {Turmoil} from './turmoil/Turmoil';
 import {RandomMAOptionType} from '../common/ma/RandomMAOptionType';
@@ -114,7 +112,7 @@ export class Game implements IGame, Logger {
   private researchedPlayers = new Set<PlayerId>();
   private draftedPlayers = new Set<PlayerId>();
   // The first player of this generation.
-  private first: IPlayer;
+  public first: IPlayer;
 
   // Drafting
   private draftRound: number = 1;
@@ -331,22 +329,22 @@ export class Game implements IGame, Logger {
         gameOptions.initialDraftVariant ||
         gameOptions.ceoExtension) {
         for (let i = 0; i < gameOptions.startingCorporations; i++) {
-          player.dealtCorporationCards.push(corporationDeck.draw(game));
+          player.dealtCorporationCards.push(corporationDeck.drawLegacy(game));
         }
         if (gameOptions.initialDraftVariant === false) {
           for (let i = 0; i < 10; i++) {
-            player.dealtProjectCards.push(projectDeck.draw(game));
+            player.dealtProjectCards.push(projectDeck.drawLegacy(game));
           }
         }
         if (gameOptions.preludeExtension) {
           for (let i = 0; i < constants.PRELUDE_CARDS_DEALT_PER_PLAYER; i++) {
-            const prelude = preludeDeck.draw(game);
+            const prelude = preludeDeck.drawLegacy(game);
             player.dealtPreludeCards.push(prelude);
           }
         }
         if (gameOptions.ceoExtension) {
           for (let i = 0; i < gameOptions.startingCeos; i++) {
-            const ceoCard = ceoDeck.draw(game);
+            const ceoCard = ceoDeck.drawLegacy(game);
             player.dealtCeoCards.push(ceoCard);
           }
         }
@@ -795,6 +793,10 @@ export class Game implements IGame, Logger {
     this.log('Generation ${0}', (b) => b.forNewGeneration().number(this.generation));
     this.incrementFirstPlayer();
 
+    this.players.forEach((player) => {
+      player.hasIncreasedTerraformRatingThisGeneration = false;
+    });
+
     if (this.gameOptions.draftVariant) {
       this.gotoDraftPhase();
     } else {
@@ -1240,16 +1242,6 @@ export class Game implements IGame, Logger {
       AresHandler.payAdjacencyAndHazardCosts(player, space, subjectToHazardAdjacency);
     });
 
-    // Hellas special requirements ocean tile
-    if (space.id === SpaceName.HELLAS_OCEAN_TILE &&
-        this.canAddOcean() &&
-        this.gameOptions.boardName === BoardName.HELLAS) {
-      if (player.color !== Color.NEUTRAL) {
-        this.defer(new PlaceOceanTile(player, {title: 'Select space for ocean from placement bonus'}));
-        this.defer(new SelectPaymentDeferred(player, constants.HELLAS_BONUS_OCEAN_COST, {title: 'Select how to pay for placement bonus ocean'}));
-      }
-    }
-
     TurmoilHandler.resolveTilePlacementCosts(player);
 
     // Part 3. Setup for bonuses
@@ -1273,7 +1265,8 @@ export class Game implements IGame, Logger {
       });
 
       AresHandler.ifAres(this, (aresData) => {
-        AresHandler.earnAdjacencyBonuses(aresData, player, space);
+        const incrementMilestone = tile?.tileType !== TileType.MARS_NOMADS;
+        AresHandler.earnAdjacencyBonuses(aresData, player, space, {incrementMilestone});
       });
 
       TurmoilHandler.resolveTilePlacementBonuses(player, space.spaceType);
@@ -1339,7 +1332,11 @@ export class Game implements IGame, Logger {
       player.stock.add(Resource.HEAT, count, {log: true});
       break;
     case SpaceBonus.OCEAN:
-      // ignore
+      // Hellas special requirements ocean tile
+      if (this.canAddOcean()) {
+        this.defer(new PlaceOceanTile(player, {title: 'Select space for ocean from placement bonus'}));
+        this.defer(new SelectPaymentDeferred(player, constants.HELLAS_BONUS_OCEAN_COST, {title: 'Select how to pay for placement bonus ocean'}));
+      }
       break;
     case SpaceBonus.MICROBE:
       this.defer(new AddResourcesToCard(player, CardResource.MICROBE, {count: count}));
@@ -1358,7 +1355,7 @@ export class Game implements IGame, Logger {
       break;
     case SpaceBonus.TEMPERATURE:
       if (this.getTemperature() < constants.MAX_TEMPERATURE) {
-        this.defer(new SimpleDeferredAction(player, () => this.increaseTemperature(player, 1)));
+        player.defer(() => this.increaseTemperature(player, 1));
         this.defer(new SelectPaymentDeferred(
           player,
           constants.VASTITAS_BOREALIS_BONUS_TEMPERATURE_COST,
@@ -1502,27 +1499,16 @@ export class Game implements IGame, Logger {
     this.gameAge++;
   }
 
-  public someoneCanHaveProductionReduced(resource: Resource, minQuantity: number = 1): boolean {
-    // in soloMode you don't have to decrease resources
-    if (this.isSoloMode()) return true;
-    return this.getPlayers().some((p) => {
-      if (p.production[resource] < minQuantity) return false;
-      // The pathfindersExpansion test is just an optimization for non-Pathfinders games.
-      if (this.gameOptions.pathfindersExpansion && p.cardIsInEffect(CardName.PRIVATE_SECURITY)) return false;
-      return true;
-    });
-  }
-
   public discardForCost(cardCount: 1 | 2, toPlace: TileType) {
     if (cardCount === 1) {
-      const card = this.projectDeck.draw(this);
+      const card = this.projectDeck.drawLegacy(this);
       this.projectDeck.discard(card);
       this.log('Drew and discarded ${0} to place a ${1}', (b) => b.card(card, {cost: true}).tileType(toPlace));
       return card.cost;
     } else {
-      const card1 = this.projectDeck.draw(this);
+      const card1 = this.projectDeck.drawLegacy(this);
       this.projectDeck.discard(card1);
-      const card2 = this.projectDeck.draw(this);
+      const card2 = this.projectDeck.drawLegacy(this);
       this.projectDeck.discard(card2);
       this.log('Drew and discarded ${0} and ${1} to place a ${2}', (b) => b.card(card1, {cost: true}).card(card2, {cost: true}).tileType(toPlace));
       return card1.cost + card2.cost;
