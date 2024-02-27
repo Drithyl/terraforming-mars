@@ -219,6 +219,7 @@ export class Game implements IGame, Logger {
     if (gameOptions.clonedGamedId !== undefined) {
       throw new Error('Cloning should not come through this execution path.');
     }
+
     const rng = new SeededRandom(seed);
     const board = GameSetup.newBoard(gameOptions, rng);
     const gameCards = new GameCards(gameOptions);
@@ -254,6 +255,13 @@ export class Game implements IGame, Logger {
     if (gameOptions.aresExtension) {
       game.aresData = AresSetup.initialData(gameOptions.aresHazards, players);
     }
+
+    // Initialize custom Global Parameters
+    gameOptions.maxOceans = globalParameterCalculator.getMaxOceanTiles(game);
+    gameOptions.maxOxygen = globalParameterCalculator.getMaxOxygenLevel(game);
+    gameOptions.maxVenus = globalParameterCalculator.getMaxVenusScale(game);
+    gameOptions.minTemperature = globalParameterCalculator.getMinTemperature(game);
+    gameOptions.maxTemperature = globalParameterCalculator.getMaxTemperature(game);
 
     const milestonesAwards = chooseMilestonesAndAwards(gameOptions);
     game.milestones = milestonesAwards.milestones;
@@ -489,7 +497,7 @@ export class Game implements IGame, Logger {
 
   public marsIsTerraformed(): boolean {
     const oxygenMaxed = this.oxygenLevel >= constants.MAX_OXYGEN_LEVEL;
-    const temperatureMaxed = this.temperature >= constants.MAX_TEMPERATURE;
+    const temperatureMaxed = this.temperature >= this.gameOptions.maxTemperature;
     const oceansMaxed = !this.canAddOcean();
     let globalParametersMaxed = oxygenMaxed && temperatureMaxed && oceansMaxed;
     const venusMaxed = this.getVenusScaleLevel() === constants.MAX_VENUS_SCALE;
@@ -1150,7 +1158,7 @@ export class Game implements IGame, Logger {
   }
 
   public increaseTemperature(player: IPlayer, increments: -2 | -1 | 1 | 2 | 3): undefined {
-    if (this.temperature >= constants.MAX_TEMPERATURE) {
+    if (this.temperature >= this.gameOptions.maxTemperature) {
       return undefined;
     }
 
@@ -1160,7 +1168,7 @@ export class Game implements IGame, Logger {
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, (constants.MAX_TEMPERATURE - this.temperature) / 2);
+    const steps = Math.min(increments, (this.gameOptions.maxTemperature - this.temperature) / 2);
 
     if (this.phase !== Phase.SOLAR) {
       // BONUS FOR HEAT PRODUCTION AT -20 and -24
@@ -1354,7 +1362,7 @@ export class Game implements IGame, Logger {
       this.defer(new AddResourcesToCard(player, CardResource.SCIENCE, {count: count}));
       break;
     case SpaceBonus.TEMPERATURE:
-      if (this.getTemperature() < constants.MAX_TEMPERATURE) {
+      if (this.getTemperature() < this.gameOptions.maxTemperature) {
         player.defer(() => this.increaseTemperature(player, 1));
         this.defer(new SelectPaymentDeferred(
           player,
@@ -1396,12 +1404,12 @@ export class Game implements IGame, Logger {
   }
 
   public canAddOcean(): boolean {
-    return this.board.getOceanSpaces().length < globalParameterCalculator.getMaxOceanTiles(this);
+    return this.board.getOceanSpaces().length < this.gameOptions.maxOceans;
   }
 
   public canRemoveOcean(): boolean {
     const count = this.board.getOceanSpaces().length;
-    return count > 0 && count < globalParameterCalculator.getMaxOceanTiles(this);
+    return count > 0 && count < this.gameOptions.maxOceans;
   }
 
   public addOcean(player: IPlayer, space: Space): void {

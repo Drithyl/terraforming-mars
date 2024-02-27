@@ -2,13 +2,19 @@ import * as constants from './constants';
 import {IGame} from '../server/IGame';
 import {BoardName} from './boards/BoardName';
 import {BigBoard} from '../server/boards/BigBoard';
+import {GameOptionsModel} from './models/GameOptionsModel';
+import {GameOptions} from '@/server/game/GameOptions';
 
+function isBigGame(game: IGame): boolean;
+function isBigGame(gameOptions: GameOptions | GameOptionsModel): boolean;
 
 // If this is a non-big game, all global values will be as defined in constants
-function isBigGame(game: IGame): boolean {
-  const gameOptions = game.gameOptions;
-
-  return gameOptions.boardName === BoardName.BIG;
+function isBigGame(gameOrOptions: any): boolean {
+  if (gameOrOptions.gameOptions !== undefined) {
+    return gameOrOptions.gameOptions.boardName === BoardName.BIG;
+  } else {
+    return gameOrOptions.boardName === BoardName.BIG;
+  }
 }
 
 // BASE CONSTANTS

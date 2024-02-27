@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {ArtificialLake} from '../../../src/server/cards/base/ArtificialLake';
-import {getMaxOceanTiles} from '@/common/GlobalParameterCalculator';
 import {Game} from '../../../src/server/Game';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
 import {TestPlayer} from '../../TestPlayer';
@@ -44,7 +43,7 @@ describe('ArtificialLake', function() {
 
     // Set oceans count to the max value
     for (const space of game.board.getSpaces(SpaceType.OCEAN, player)) {
-      if (game.board.getOceanSpaces().length < getMaxOceanTiles(game)) {
+      if (game.board.getOceanSpaces().length < game.gameOptions.maxOceans) {
         game.addOcean(player, space);
       }
     }

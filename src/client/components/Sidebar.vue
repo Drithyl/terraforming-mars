@@ -8,10 +8,10 @@
     <div :class="'party-name party-name-indicator party-name--'+rulingPartyToCss()"> <span v-i18n>{{ getRulingParty() }}</span></div>
   </div>
   <div class="global_params">
-    <global-parameter-value :param="this.globalParameter.TEMPERATURE" :value="this.temperature"></global-parameter-value>
-    <global-parameter-value :param="this.globalParameter.OXYGEN" :value="this.oxygen"></global-parameter-value>
-    <global-parameter-value :param="this.globalParameter.OCEANS" :value="this.oceans"></global-parameter-value>
-    <global-parameter-value v-if="gameOptions.venusNextExtension" :param="this.globalParameter.VENUS" :value="this.venus"></global-parameter-value>
+    <global-parameter-value :param="this.globalParameter.TEMPERATURE" :value="this.temperature" :min="this.minTemperature" :max="this.maxTemperature"></global-parameter-value>
+    <global-parameter-value :param="this.globalParameter.OXYGEN" :value="this.oxygen" :max="this.maxOxygen"></global-parameter-value>
+    <global-parameter-value :param="this.globalParameter.OCEANS" :value="this.oceans" :max="this.maxOceans"></global-parameter-value>
+    <global-parameter-value v-if="gameOptions.venusNextExtension" :param="this.globalParameter.VENUS" :value="this.venus" :max="this.maxVenus"></global-parameter-value>
     <MoonGlobalParameterValue v-if="gameOptions.moonExpansion" :moonData="this.moonData"></MoonGlobalParameterValue>
   </div>
   <div class="sidebar_item preferences_player" :title="$t('Player Color Cube')">
@@ -114,6 +114,21 @@ export default Vue.extend({
       type: Number,
     },
     venus: {
+      type: Number,
+    },
+    maxOxygen: {
+      type: Number,
+    },
+    maxOceans: {
+      type: Number,
+    },
+    maxVenus: {
+      type: Number,
+    },
+    minTemperature: {
+      type: Number,
+    },
+    maxTemperature: {
       type: Number,
     },
     moonData: {

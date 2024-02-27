@@ -32,7 +32,6 @@ import {SpaceId} from '../../common/Types';
 import {cardsToModel, coloniesToModel} from './ModelUtils';
 import {runId} from '../utils/server-ids';
 import {UnderworldExpansion} from '../underworld/UnderworldExpansion';
-import * as globalParameterCalculator from '@/common/GlobalParameterCalculator';
 
 export class Server {
   public static getSimpleGameModel(game: IGame): SimpleGameModel {
@@ -84,10 +83,6 @@ export class Server {
       equatorLength: Math.max(...spaces.map((s) => s.y)) + 1,
       spectatorId: game.spectatorId,
       temperature: game.getTemperature(),
-      maxOceanTiles: globalParameterCalculator.getMaxOceanTiles(game),
-      maxOxygenLevel: globalParameterCalculator.getMaxOxygenLevel(game),
-      maxTemperature: globalParameterCalculator.getMaxTemperature(game),
-      maxVenusScale: globalParameterCalculator.getMaxVenusScale(game),
       isTerraformed: game.marsIsTerraformed(),
       turmoil: turmoil,
       undoCount: game.undoCount,
@@ -426,6 +421,13 @@ export class Server {
       venusNextExtension: options.venusNextExtension,
       undoOption: options.undoOption,
       underworldExpansion: options.underworldExpansion,
+
+      // Global Parameters
+      maxOceans: options.maxOceans,
+      maxOxygen: options.maxOxygen,
+      maxVenus: options.maxVenus,
+      minTemperature: options.minTemperature,
+      maxTemperature: options.maxTemperature,
     };
   }
 

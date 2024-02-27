@@ -24,7 +24,7 @@ type BaseGlobalParameter = Exclude<
   GlobalParameter.MOON_MINING_RATE |
   GlobalParameter.MOON_LOGISTICS_RATE>;
 
-const attributes: Record<BaseGlobalParameter, {max: number, title: string, iconClass: string}> = {
+const attributes: Record<BaseGlobalParameter, {title: string, iconClass: string}> = {
   [GlobalParameter.TEMPERATURE]: {title: 'Temperature', iconClass: 'temperature-tile'},
   [GlobalParameter.OXYGEN]: {title: 'Oxygen Level', iconClass: 'oxygen-tile'},
   [GlobalParameter.OCEANS]: {title: 'Oceans', iconClass: 'ocean-tile'},
@@ -43,21 +43,7 @@ export default Vue.extend({
   },
   computed: {
     isMax(): boolean {
-      let max: number;
-
-      if (this.param === GlobalParameter.TEMPERATURE) {
-        max = this.game.maxTemperature;
-      } else if (this.param === GlobalParameter.OXYGEN) {
-        max = this.game.maxOxygenLevel;
-      } else if (this.param === GlobalParameter.OCEANS) {
-        max = this.game.maxOceanTiles;
-      } else if (this.param === GlobalParameter.VENUS) {
-        max = this.game.maxVenusScale;
-      } else {
-        console.error('Global Parameter name does not match any of the four parameters');
-      }
-
-      return this.value === max;
+      return this.max;
     },
     title(): string {
       return attributes[this.param].title;

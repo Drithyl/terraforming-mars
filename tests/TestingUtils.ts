@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {IGame} from '../src/server/IGame';
-import {getMaxOceanTiles} from '@/common/GlobalParameterCalculator';
 import {Space} from '../src/server/boards/Space';
 import {Phase} from '../src/common/Phase';
 import {Turmoil} from '../src/server/turmoil/Turmoil';
@@ -26,7 +25,7 @@ import {Warning} from '../src/common/cards/Warning';
 export function maxOutOceans(player: IPlayer, toValue: number = 0): Array<Space> {
   const oceans = [];
   if (toValue < 1) {
-    toValue = getMaxOceanTiles(player.game);
+    toValue = player.game.gameOptions.maxOceans;
   }
 
   while (player.game.board.getOceanSpaces().length < toValue) {

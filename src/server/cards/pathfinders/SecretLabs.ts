@@ -13,7 +13,6 @@ import {Resource} from '../../../common/Resource';
 import {CardResource} from '../../../common/CardResource';
 import {TRSource} from '../../../common/cards/TRSource';
 import {digit} from '../Options';
-import {getMaxOceanTiles} from '../../../common/GlobalParameterCalculator';
 
 export class SecretLabs extends Card implements IProjectCard {
   constructor() {
@@ -60,7 +59,7 @@ export class SecretLabs extends Card implements IProjectCard {
     const options = new OrOptions();
 
     if (player.canAfford({cost: 0, tr: {oceans: 1}})) {
-      const oceanPlacementAvailable = player.game.board.getOceanSpaces().length < getMaxOceanTiles(player.game);
+      const oceanPlacementAvailable = player.game.board.getOceanSpaces().length < player.game.gameOptions.maxOceans;
       const optionTitle = oceanPlacementAvailable ? 'Place an ocean tile. Add 2 microbes to ANY card.': 'Add 2 microbes to ANY card.';
       options.options.push(new SelectOption(optionTitle).andThen(() => {
         if (oceanPlacementAvailable) player.game.defer(new PlaceOceanTile(player));

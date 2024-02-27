@@ -637,7 +637,7 @@ export class Player implements IPlayer {
     action.title = 'Select action for World Government Terraforming';
     action.buttonLabel = 'Confirm';
     const game = this.game;
-    if (game.getTemperature() < constants.MAX_TEMPERATURE) {
+    if (game.getTemperature() < this.game.gameOptions.maxTemperature) {
       action.options.push(
         new SelectOption('Increase temperature', 'Increase').andThen(() => {
           game.increaseTemperature(this, 1);

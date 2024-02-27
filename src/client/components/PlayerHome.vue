@@ -21,6 +21,11 @@
       :turmoil = "game.turmoil"
       :moonData="game.moon"
       :gameOptions = "game.gameOptions"
+      :maxOxygen = "game.gameOptions.maxOxygen"
+      :maxOceans = "game.gameOptions.maxOceans"
+      :maxVenus = "game.gameOptions.maxVenus"
+      :minTemperature = "game.gameOptions.minTemperature"
+      :maxTemperature = "game.gameOptions.maxTemperature"
       :playerNumber = "playerView.players.length"
       :lastSoloGeneration = "game.lastSoloGeneration">
         <div class="deck-size">{{ game.deckSize }}</div>
@@ -41,6 +46,11 @@
           :aresExtension="game.gameOptions.aresExtension"
           :pathfindersExpansion="game.gameOptions.pathfindersExpansion"
           :altVenusBoard="game.gameOptions.altVenusBoard"
+          :maxOxygen = "game.gameOptions.maxOxygen"
+          :maxOceans = "game.gameOptions.maxOceans"
+          :maxVenus = "game.gameOptions.maxVenus"
+          :minTemperature = "game.gameOptions.minTemperature"
+          :maxTemperature = "game.gameOptions.maxTemperature"
           :aresData="game.aresData"
           :tileView="tileView"
           @toggleTileView="cycleTileView()"

@@ -62,6 +62,14 @@ export type GameOptions = {
   escapeVelocityPeriod?: number;
   escapeVelocityPenalty?: number;
   twoCorpsVariant: boolean;
+
+  // Global Parameters
+  maxOceans: number;
+  maxOxygen: number;
+  maxVenus: number;
+
+  minTemperature: number;
+  maxTemperature: number;
 }
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
@@ -113,4 +121,11 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   undoOption: false,
   venusNextExtension: false,
   twoCorpsVariant: false,
+
+  // Global Parameters
+  maxOceans: constants.MAX_OCEAN_TILES,
+  maxOxygen: constants.MAX_OXYGEN_LEVEL,
+  maxVenus: constants.MAX_VENUS_SCALE,
+  minTemperature: constants.MIN_TEMPERATURE,
+  maxTemperature: constants.MAX_TEMPERATURE,
 };

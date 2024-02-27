@@ -33,10 +33,6 @@ export type GameModel = {
   oceans: number;
   oxygenLevel: number;
   passedPlayers: ReadonlyArray<Color>;
-  maxOceanTiles: number;
-  maxOxygenLevel: number;
-  maxTemperature: number;
-  maxVenusScale: number;
   pathfinders: PathfindersModel | undefined;
   phase: Phase;
   spaces: ReadonlyArray<SpaceModel>;
