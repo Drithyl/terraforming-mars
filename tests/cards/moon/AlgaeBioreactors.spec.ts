@@ -7,7 +7,6 @@ import {expect} from 'chai';
 import {MoonData} from '../../../src/server/moon/MoonData';
 import {MoonExpansion} from '../../../src/server/moon/MoonExpansion';
 import {Phase} from '../../../src/common/Phase';
-import {MAX_OXYGEN_LEVEL} from '../../../src/common/constants';
 
 describe('AlgaeBioreactors', () => {
   let player: TestPlayer;
@@ -57,7 +56,7 @@ describe('AlgaeBioreactors', () => {
     testRedsCosts(() => player.canPlay(card), player, card.cost, 6);
     moonData.habitatRate = 8;
     testRedsCosts(() => player.canPlay(card), player, card.cost, 3);
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     testRedsCosts(() => player.canPlay(card), player, card.cost, 0);
   });
 });

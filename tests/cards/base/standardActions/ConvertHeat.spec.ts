@@ -5,7 +5,6 @@ import {cast, churnAction, setTemperature} from '../../../TestingUtils';
 import {TestPlayer} from '../../../TestPlayer';
 import {PoliticalAgendas} from '../../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../../src/server/turmoil/parties/Reds';
-import {MAX_TEMPERATURE} from '../../../../src/common/constants';
 import {testGame} from '../../../TestGame';
 import {IGame} from '../../../../src/server/IGame';
 
@@ -49,14 +48,14 @@ describe('ConvertHeat', function() {
 
     expect(card.canAct(player)).eq(true);
 
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(player.getTerraformRating()).eq(20);
     expect(card.canAct(player)).eq(true);
 
     cast(card.action(player), undefined);
 
-    expect(game.getTemperature()).eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).eq(game.gameOptions.maxTemperature);
     expect(player.heat).eq(0);
     expect(player.getTerraformRating()).eq(20);
   });

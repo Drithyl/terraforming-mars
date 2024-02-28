@@ -496,11 +496,11 @@ export class Game implements IGame, Logger {
   }
 
   public marsIsTerraformed(): boolean {
-    const oxygenMaxed = this.oxygenLevel >= constants.MAX_OXYGEN_LEVEL;
+    const oxygenMaxed = this.oxygenLevel >= this.gameOptions.maxOxygen;
     const temperatureMaxed = this.temperature >= this.gameOptions.maxTemperature;
     const oceansMaxed = !this.canAddOcean();
     let globalParametersMaxed = oxygenMaxed && temperatureMaxed && oceansMaxed;
-    const venusMaxed = this.getVenusScaleLevel() === constants.MAX_VENUS_SCALE;
+    const venusMaxed = this.getVenusScaleLevel() === this.gameOptions.maxVenus;
 
     MoonExpansion.ifMoon(this, (moonData) => {
       if (this.gameOptions.requiresMoonTrackCompletion) {
@@ -1070,7 +1070,7 @@ export class Game implements IGame, Logger {
   }
 
   public increaseOxygenLevel(player: IPlayer, increments: -2 | -1 | 1 | 2): void {
-    if (this.oxygenLevel >= constants.MAX_OXYGEN_LEVEL) {
+    if (this.oxygenLevel >= this.gameOptions.maxOxygen) {
       return undefined;
     }
 
@@ -1081,7 +1081,7 @@ export class Game implements IGame, Logger {
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, constants.MAX_OXYGEN_LEVEL - this.oxygenLevel);
+    const steps = Math.min(increments, this.gameOptions.maxOxygen - this.oxygenLevel);
 
     if (this.phase !== Phase.SOLAR) {
       TurmoilHandler.onGlobalParameterIncrease(player, GlobalParameter.OXYGEN, steps);
@@ -1104,7 +1104,7 @@ export class Game implements IGame, Logger {
   }
 
   public increaseVenusScaleLevel(player: IPlayer, increments: -1 | 1 | 2 | 3): number {
-    if (this.venusScaleLevel >= constants.MAX_VENUS_SCALE) {
+    if (this.venusScaleLevel >= this.gameOptions.maxVenus) {
       return 0;
     }
 
@@ -1115,7 +1115,7 @@ export class Game implements IGame, Logger {
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, (constants.MAX_VENUS_SCALE - this.venusScaleLevel) / 2);
+    const steps = Math.min(increments, (this.gameOptions.maxVenus - this.venusScaleLevel) / 2);
 
     if (this.phase !== Phase.SOLAR) {
       if (this.venusScaleLevel < constants.VENUS_LEVEL_FOR_CARD_BONUS &&
@@ -1129,10 +1129,10 @@ export class Game implements IGame, Logger {
       if (this.gameOptions.altVenusBoard) {
         const newValue = this.venusScaleLevel + steps * 2;
         const minimalBaseline = Math.max(this.venusScaleLevel, constants.ALT_VENUS_MINIMUM_BONUS);
-        const maximumBaseline = Math.min(newValue, constants.MAX_VENUS_SCALE);
+        const maximumBaseline = Math.min(newValue, this.gameOptions.maxVenus);
         const standardResourcesGranted = Math.max((maximumBaseline - minimalBaseline) / 2, 0);
 
-        const grantWildResource = this.venusScaleLevel + (steps * 2) >= constants.MAX_VENUS_SCALE;
+        const grantWildResource = this.venusScaleLevel + (steps * 2) >= this.gameOptions.maxVenus;
         // The second half of this expression removes any increases earler than 16-to-18.
         if (grantWildResource || standardResourcesGranted > 0) {
           this.defer(new GrantVenusAltTrackBonusDeferred(player, standardResourcesGranted, grantWildResource));
@@ -1163,7 +1163,7 @@ export class Game implements IGame, Logger {
     }
 
     if (increments === -2 || increments === -1) {
-      this.temperature = Math.max(constants.MIN_TEMPERATURE, this.temperature + increments * 2);
+      this.temperature = Math.max(this.gameOptions.minTemperature, this.temperature + increments * 2);
       return undefined;
     }
 

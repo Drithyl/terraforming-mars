@@ -34,7 +34,7 @@ import {UnderworldExpansion} from '../underworld/UnderworldExpansion';
 import {SelectResource} from '../inputs/SelectResource';
 import {RemoveResourcesFromCard} from '../deferredActions/RemoveResourcesFromCard';
 import {isIProjectCard} from '../cards/IProjectCard';
-import {MAXIMUM_HABITAT_RATE, MAXIMUM_LOGISTICS_RATE, MAXIMUM_MINING_RATE, MAX_OCEAN_TILES, MAX_OXYGEN_LEVEL, MAX_TEMPERATURE, MAX_VENUS_SCALE} from '../../common/constants';
+import {MAXIMUM_HABITAT_RATE, MAXIMUM_LOGISTICS_RATE, MAXIMUM_MINING_RATE} from '../../common/constants';
 
 export class Executor implements BehaviorExecutor {
   public canExecute(behavior: Behavior, player: IPlayer, card: ICard, canAffordOptions?: CanAffordOptions) {
@@ -54,18 +54,18 @@ export class Executor implements BehaviorExecutor {
 
     if (behavior.global !== undefined) {
       const g = behavior.global;
-      if (g.temperature !== undefined && game.getTemperature() >= MAX_TEMPERATURE) {
+      if (g.temperature !== undefined && game.getTemperature() >= game.gameOptions.maxTemperature) {
         card.warnings.add('maxtemp');
       }
-      if (g.oxygen !== undefined && game.getOxygenLevel() >= MAX_OXYGEN_LEVEL) {
+      if (g.oxygen !== undefined && game.getOxygenLevel() >= game.gameOptions.maxOxygen) {
         card.warnings.add('maxoxygen');
       }
-      if (g.venus !== undefined && game.getVenusScaleLevel() >= MAX_VENUS_SCALE) {
+      if (g.venus !== undefined && game.getVenusScaleLevel() >= game.gameOptions.maxVenus) {
         card.warnings.add('maxvenus');
       }
     }
 
-    if (behavior.ocean !== undefined && game.board.getOceanSpaces().length >= MAX_OCEAN_TILES) {
+    if (behavior.ocean !== undefined && game.board.getOceanSpaces().length >= game.gameOptions.maxOceans) {
       card.warnings.add('maxoceans');
     }
 

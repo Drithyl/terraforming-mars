@@ -6,7 +6,6 @@ import {TestPlayer} from '../../TestPlayer';
 import {PoliticalAgendas} from '../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../src/server/turmoil/parties/Reds';
 import {Phase} from '../../../src/common/Phase';
-import {MAX_VENUS_SCALE} from '../../../src/common/constants';
 import {testGame} from '../../TestGame';
 
 describe('AirScrappingStandardProject', function() {
@@ -43,7 +42,7 @@ describe('AirScrappingStandardProject', function() {
     player.megaCredits = 15;
     expect(card.canAct(player)).eq(true);
 
-    setVenusScaleLevel(game, MAX_VENUS_SCALE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
 
     expect(player.getTerraformRating()).eq(20);
     expect(card.canAct(player)).eq(true);
@@ -51,7 +50,7 @@ describe('AirScrappingStandardProject', function() {
     cast(card.action(player), undefined);
     runAllActions(game);
 
-    expect(game.getVenusScaleLevel()).eq(MAX_VENUS_SCALE);
+    expect(game.getVenusScaleLevel()).eq(game.gameOptions.maxVenus);
     expect(player.getTerraformRating()).eq(20);
     expect(player.megaCredits).eq(0);
   });

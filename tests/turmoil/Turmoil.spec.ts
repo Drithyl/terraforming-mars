@@ -206,7 +206,7 @@ describe('Turmoil', function() {
     player.megaCredits = 23;
     expect(new GreeneryStandardProject().canAct(player)).equal(false);
 
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     expect(new GreeneryStandardProject().canAct(player)).equal(true);
   });
 
@@ -280,13 +280,13 @@ describe('Turmoil', function() {
     player.megaCredits = card.cost + 6;
     expect(player.canPlay(card)).deep.eq({redsCost: 6});
 
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL - 1);
+    setOxygenLevel(game, game.gameOptions.maxOxygen - 1);
     player.megaCredits = card.cost + 2;
     expect(player.canPlay(card)).is.false;
     player.megaCredits = card.cost + 3;
     expect(player.canPlay(card)).deep.eq({redsCost: 3});
 
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
 
     player.megaCredits = card.cost;
     expect(player.canPlay(card)).is.true;
@@ -357,14 +357,14 @@ describe('Turmoil', function() {
     expect(player.canPlay(card)).deep.eq({redsCost: 6});
 
     // Set temperature so it only raises one step.
-    setTemperature(game, constants.MAX_TEMPERATURE - 2);
+    setTemperature(game, game.gameOptions.maxTemperature - 2);
 
     player.megaCredits = card.cost;
     expect(player.canPlay(card)).is.false;
     player.megaCredits = card.cost + 3;
     expect(player.canPlay(card)).deep.eq({redsCost: 3});
 
-    setTemperature(game, constants.MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     player.megaCredits = card.cost;
     expect(player.canPlay(card)).is.true;
@@ -440,14 +440,14 @@ describe('Turmoil', function() {
     expect(player.canPlay(card)).deep.eq({redsCost: 9});
 
     // Set Venus so it only raises one step.
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE - 2);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus - 2);
 
     player.megaCredits = card.cost;
     expect(player.canPlay(card)).is.false;
     player.megaCredits = card.cost + 3;
     expect(player.canPlay(card)).deep.eq({redsCost: 3});
 
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
 
     player.megaCredits = card.cost;
     expect(player.canPlay(card)).is.true;

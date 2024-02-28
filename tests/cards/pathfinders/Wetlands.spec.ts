@@ -8,7 +8,6 @@ import {TestPlayer} from '../../TestPlayer';
 import {EmptyBoard} from '../../ares/EmptyBoard';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
 import {Space} from '../../../src/server/boards/Space';
-import {MAX_OXYGEN_LEVEL, MAX_TEMPERATURE} from '../../../src/common/constants';
 import {CardName} from '../../../src/common/cards/CardName';
 
 const toSpaceId = (space: Space): string => space.id;
@@ -121,8 +120,8 @@ describe('Wetlands', function() {
     for (let idx = 0; idx <= 8; idx++) {
       addOcean(player, spaces[idx].id);
     }
-    setTemperature(game, MAX_TEMPERATURE);
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     expect(game.marsIsTerraformed()).is.true;
     spaces[0].tile!.tileType = TileType.WETLANDS;
     expect(game.marsIsTerraformed()).is.false;

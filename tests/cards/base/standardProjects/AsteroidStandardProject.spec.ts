@@ -6,7 +6,6 @@ import {Game} from '../../../../src/server/Game';
 import {PoliticalAgendas} from '../../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../../src/server/turmoil/parties/Reds';
 import {Phase} from '../../../../src/common/Phase';
-import {MAX_TEMPERATURE} from '../../../../src/common/constants';
 import {testGame} from '../../../TestGame';
 
 describe('AsteroidStandardProject', function() {
@@ -43,7 +42,7 @@ describe('AsteroidStandardProject', function() {
     player.megaCredits = 14;
     expect(card.canAct(player)).eq(true);
 
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(player.getTerraformRating()).eq(20);
     expect(card.canAct(player)).eq(true);
@@ -51,7 +50,7 @@ describe('AsteroidStandardProject', function() {
     cast(card.action(player), undefined);
     runAllActions(game);
 
-    expect(game.getTemperature()).eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).eq(20);
     expect(player.megaCredits).eq(0);
   });

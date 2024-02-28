@@ -646,7 +646,7 @@ export class Player implements IPlayer {
         }),
       );
     }
-    if (game.getOxygenLevel() < constants.MAX_OXYGEN_LEVEL) {
+    if (game.getOxygenLevel() < game.gameOptions.maxOxygen) {
       action.options.push(
         new SelectOption('Increase oxygen', 'Increase').andThen(() => {
           game.increaseOxygenLevel(this, 1);
@@ -665,7 +665,7 @@ export class Player implements IPlayer {
           }),
       );
     }
-    if (game.getVenusScaleLevel() < constants.MAX_VENUS_SCALE && game.gameOptions.venusNextExtension) {
+    if (game.getVenusScaleLevel() < game.gameOptions.maxVenus && game.gameOptions.venusNextExtension) {
       action.options.push(
         new SelectOption('Increase Venus scale', 'Increase').andThen(() => {
           game.increaseVenusScaleLevel(this, 1);

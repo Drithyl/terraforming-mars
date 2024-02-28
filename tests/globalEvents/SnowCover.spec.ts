@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {setTemperature} from '../TestingUtils';
-import {MAX_TEMPERATURE} from '../../src/common/constants';
 import {Game} from '../../src/server/Game';
 import {SnowCover} from '../../src/server/turmoil/globalEvents/SnowCover';
 import {Kelvinists} from '../../src/server/turmoil/parties/Kelvinists';
@@ -46,8 +45,8 @@ describe('SnowCover', function() {
   });
 
   it('cannot reduce temperature if maxed out', function() {
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
     card.resolve(game, turmoil);
-    expect(game.getTemperature()).to.eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).to.eq(game.gameOptions.maxTemperature);
   });
 });

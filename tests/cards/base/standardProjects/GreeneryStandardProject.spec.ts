@@ -6,7 +6,6 @@ import {Game} from '../../../../src/server/Game';
 import {PoliticalAgendas} from '../../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../../src/server/turmoil/parties/Reds';
 import {Phase} from '../../../../src/common/Phase';
-import {MAX_OXYGEN_LEVEL} from '../../../../src/common/constants';
 import {TileType} from '../../../../src/common/TileType';
 import {testGame} from '../../../TestGame';
 import {UnderworldTestHelper} from '../../../underworld/UnderworldTestHelper';
@@ -43,7 +42,7 @@ describe('GreeneryStandardProject', function() {
   it('can act when maximized', () => {
     player.megaCredits = card.cost;
     expect(card.canAct(player)).is.true;
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     // Players can still place greeneries even if the oxygen level is maximized
     expect(card.canAct(player)).is.true;
   });

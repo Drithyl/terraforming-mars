@@ -4,7 +4,6 @@ import {SpaceName} from '../src/server/SpaceName';
 import {Mayor} from '../src/server/milestones/Mayor';
 import {Banker} from '../src/server/awards/Banker';
 import {Thermalist} from '../src/server/awards/Thermalist';
-import * as constants from '../src/common/constants';
 import {Birds} from '../src/server/cards/base/Birds';
 import {WaterImportFromEuropa} from '../src/server/cards/base/WaterImportFromEuropa';
 import {Phase} from '../src/common/Phase';
@@ -122,7 +121,7 @@ describe('Game', () => {
     let initialTR = player.getTerraformRating();
     game.increaseTemperature(player, 2);
 
-    expect(game.getTemperature()).to.eq(constants.MAX_TEMPERATURE);
+    expect(game.getTemperature()).to.eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).to.eq(initialTR + 1);
 
     initialTR = player.getTerraformRating();
@@ -130,7 +129,7 @@ describe('Game', () => {
 
     // Try 3 steps increase
     game.increaseTemperature(player, 3);
-    expect(game.getTemperature()).to.eq(constants.MAX_TEMPERATURE);
+    expect(game.getTemperature()).to.eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).to.eq(initialTR + 1);
   });
 
@@ -143,7 +142,7 @@ describe('Game', () => {
     const initialTR = player.getTerraformRating();
     game.increaseOxygenLevel(player, 2);
 
-    expect(game.getOxygenLevel()).to.eq(constants.MAX_OXYGEN_LEVEL);
+    expect(game.getOxygenLevel()).to.eq(game.gameOptions.maxOxygen);
     expect(player.getTerraformRating()).to.eq(initialTR + 1);
   });
 
@@ -183,9 +182,9 @@ describe('Game', () => {
     const player = TestPlayer.BLUE.newPlayer();
     const player2 = TestPlayer.RED.newPlayer();
     const game = Game.newInstance('game-venusterraform', [player, player2], player, {venusNextExtension: true, requiresVenusTrackCompletion: true});
-    setTemperature(game, constants.MAX_TEMPERATURE);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
-    // setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
+    // setVenusScaleLevel(game, game.gameOptions.maxVenus);
     setVenusScaleLevel(game, 6);
     maxOutOceans(player);
     // Skip final greenery Phase
@@ -203,9 +202,9 @@ describe('Game', () => {
     const player = TestPlayer.BLUE.newPlayer();
     const player2 = TestPlayer.RED.newPlayer();
     const game = Game.newInstance('game-venusterraform', [player, player2], player, {venusNextExtension: true, requiresVenusTrackCompletion: true});
-    setTemperature(game, constants.MAX_TEMPERATURE);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
     maxOutOceans(player);
     // Skip final greenery Phase
     player.plants = 0;
@@ -230,7 +229,7 @@ describe('Game', () => {
     const game = Game.newInstance('game-venusterraform', [player, player2], player, {venusNextExtension: true, requiresVenusTrackCompletion: true});
     setTemperature(game, 2);
     setOxygenLevel(game, 2);
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
     maxOutOceans(player);
     // Skip final greenery Phase
     player.plants = 0;
@@ -261,8 +260,8 @@ describe('Game', () => {
     game.generation = 10;
 
     // Terraform
-    setTemperature(game, constants.MAX_TEMPERATURE);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     maxOutOceans(player);
 
     player.plants = 0; // Skip final greenery Phase
@@ -282,8 +281,8 @@ describe('Game', () => {
 
     // Set up end-game conditions
     game.generation = 14;
-    setTemperature(game, constants.MAX_TEMPERATURE);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     maxOutOceans(player);
     player.plants = 9;
 
@@ -303,8 +302,8 @@ describe('Game', () => {
 
     // Set up near end-game conditions
     game.generation = 14;
-    setTemperature(game, constants.MAX_TEMPERATURE - 2);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature - 2);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     maxOutOceans(player);
     player.plants = 9;
 
@@ -360,8 +359,8 @@ describe('Game', () => {
     game.generation = 14;
 
     // Terraform
-    setTemperature(game, constants.MAX_TEMPERATURE);
-    setOxygenLevel(game, constants.MAX_OXYGEN_LEVEL - 2);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen - 2);
     maxOutOceans(player);
 
     // Must remove waitingFor or playerIsFinishedTakingActions

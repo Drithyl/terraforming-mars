@@ -9,7 +9,6 @@ import {Phase} from '../../../src/common/Phase';
 import {AndOptions} from '../../../src/server/inputs/AndOptions';
 import {TestPlayer} from '../../TestPlayer';
 import {Units} from '../../../src/common/Units';
-import {MAX_OXYGEN_LEVEL, MAX_TEMPERATURE} from '../../../src/common/constants';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 import {cast, runAllActions, setOxygenLevel, setTemperature} from '../../TestingUtils';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
@@ -166,8 +165,8 @@ describe('Philares', () => {
     game.addGreenery(philaresPlayer, space);
 
     // Max out all global parameters
-    setTemperature(game, MAX_TEMPERATURE);
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     // maxOutOceans(player);
 
     // Setup plants for endgame

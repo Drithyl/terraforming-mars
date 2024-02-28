@@ -1,7 +1,6 @@
 import {expect} from 'chai';
 import {DirectedImpactors} from '../../../src/server/cards/promo/DirectedImpactors';
 import {RotatorImpacts} from '../../../src/server/cards/venusNext/RotatorImpacts';
-import {MAX_TEMPERATURE} from '../../../src/common/constants';
 import {Game} from '../../../src/server/Game';
 import {Payment} from '../../../src/common/inputs/Payment';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
@@ -81,7 +80,7 @@ describe('DirectedImpactors', function() {
   it('Can still spend resource even if temperature is max', function() {
     player.playedCards.push(card);
     card.resourceCount = 1;
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(card.canAct(player)).is.true;
   });

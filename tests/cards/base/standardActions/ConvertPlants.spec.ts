@@ -6,7 +6,6 @@ import {TestPlayer} from '../../../TestPlayer';
 import {Game} from '../../../../src/server/Game';
 import {PoliticalAgendas} from '../../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../../src/server/turmoil/parties/Reds';
-import {MAX_OXYGEN_LEVEL} from '../../../../src/common/constants';
 
 describe('ConvertPlants', function() {
   let card: ConvertPlants;
@@ -51,7 +50,7 @@ describe('ConvertPlants', function() {
   it('Can act when maximized', function() {
     player.plants = 8;
     expect(card.canAct(player)).eq(true);
-    setOxygenLevel(player.game, MAX_OXYGEN_LEVEL);
+    setOxygenLevel(player.game, player.game.gameOptions.maxOxygen);
     expect(card.canAct(player)).eq(true);
   });
 });

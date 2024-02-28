@@ -14,7 +14,6 @@ import {OceanCity} from '../../../src/server/cards/ares/OceanCity';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
 import {testGame} from '../../TestGame';
 import {PartyName} from '../../../src/common/turmoil/PartyName';
-import {MAX_TEMPERATURE, MAX_OXYGEN_LEVEL} from '../../../src/common/constants';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 
 describe('GeologicalSurvey', () => {
@@ -176,8 +175,8 @@ describe('GeologicalSurvey', () => {
 
     player.playedCards.push(card);
     // Set up end-game conditions
-    setTemperature(game, MAX_TEMPERATURE);
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setTemperature(game, game.gameOptions.maxTemperature);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
     maxOutOceans(player);
     player.plants = 9;
     player.steel = 0;

@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import * as constants from '../../../src/common/constants';
 import {Research} from '../../../src/server/cards/base/Research';
 import {SearchForLife} from '../../../src/server/cards/base/SearchForLife';
 import {ICard} from '../../../src/server/cards/ICard';
@@ -83,7 +82,7 @@ describe('Atmoscoop', function() {
 
   it('Should play - single target, one global parameter maxed', function() {
     player.playedCards.push(dirigibles);
-    setTemperature(game, constants.MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     cast(card.play(player), undefined);
     runAllActions(game);
@@ -95,8 +94,8 @@ describe('Atmoscoop', function() {
 
   it('Should play - single target, both global parameters maxed', function() {
     player.playedCards.push(dirigibles);
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
-    setTemperature(game, constants.MAX_TEMPERATURE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(card.play(player)).is.undefined;
     runAllActions(game);
@@ -107,7 +106,7 @@ describe('Atmoscoop', function() {
 
   it('Should play - multiple targets, one global parameter maxed', function() {
     player.playedCards.push(dirigibles, floatingHabs);
-    setTemperature(game, constants.MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(card.play(player)).is.undefined;
     runAllActions(game);
@@ -120,8 +119,8 @@ describe('Atmoscoop', function() {
 
   it('Should play - multiple targets, both global parameters maxed', function() {
     player.playedCards.push(dirigibles, floatingHabs);
-    setVenusScaleLevel(game, constants.MAX_VENUS_SCALE);
-    setTemperature(game, constants.MAX_TEMPERATURE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(card.play(player)).is.undefined;
     runAllActions(game);

@@ -139,7 +139,7 @@ describe('LunaEcumenopolis', () => {
   //   testRedsCosts(() => player.canPlay(card), player, card.cost, 6);
   //   moonData.habitatRate = 8;
   //   testRedsCosts(() => player.canPlay(card), player, card.cost, 3);
-  //   setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+  //   setOxygenLevel(game, game.gameOptions.maxOxygen);
   //   testRedsCosts(() => player.canPlay(card), player, card.cost, 0);
   // });
 });

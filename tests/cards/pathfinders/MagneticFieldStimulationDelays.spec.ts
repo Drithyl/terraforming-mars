@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {setTemperature, setOxygenLevel} from '../../TestingUtils';
-import {MAX_OXYGEN_LEVEL, MAX_TEMPERATURE} from '../../../src/common/constants';
 import {Game} from '../../../src/server/Game';
 import {MagneticFieldStimulationDelays} from '../../../src/server/cards/pathfinders/MagneticFieldStimulationDelays';
 import {TestPlayer} from '../../TestPlayer';
@@ -51,22 +50,22 @@ describe('MagneticFieldStimulationDelays', function() {
   });
 
   it('cannot reduce temperature if maxed out', function() {
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
     setOxygenLevel(game, 5);
 
     card.resolve(game);
 
-    expect(game.getTemperature()).to.eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).to.eq(game.gameOptions.maxTemperature);
     expect(game.getOxygenLevel()).to.eq(3);
   });
 
   it('cannot reduce oxygen if maxed out', function() {
     setTemperature(game, 0);
-    setOxygenLevel(game, MAX_OXYGEN_LEVEL);
+    setOxygenLevel(game, game.gameOptions.maxOxygen);
 
     card.resolve(game);
 
     expect(game.getTemperature()).to.eq(-4);
-    expect(game.getOxygenLevel()).to.eq(MAX_OXYGEN_LEVEL);
+    expect(game.getOxygenLevel()).to.eq(game.gameOptions.maxOxygen);
   });
 });

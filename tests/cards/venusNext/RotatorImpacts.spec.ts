@@ -2,7 +2,6 @@ import {expect} from 'chai';
 import {cast, setVenusScaleLevel} from '../../TestingUtils';
 import {MorningStarInc} from '../../../src/server/cards/venusNext/MorningStarInc';
 import {RotatorImpacts} from '../../../src/server/cards/venusNext/RotatorImpacts';
-import {MAX_VENUS_SCALE} from '../../../src/common/constants';
 import {Game} from '../../../src/server/Game';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 import {TestPlayer} from '../../TestPlayer';
@@ -82,7 +81,7 @@ describe('RotatorImpacts', () => {
     player.playedCards.push(card);
     card.resourceCount = 1;
 
-    setVenusScaleLevel(game, MAX_VENUS_SCALE);
+    setVenusScaleLevel(game, game.gameOptions.maxVenus);
     expect(card.canAct(player)).is.not.true;
   });
 });

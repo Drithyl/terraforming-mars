@@ -41,8 +41,8 @@ export class Atmoscoop extends Card implements IProjectCard {
   }
 
   public override bespokeCanPlay(player: IPlayer): boolean {
-    const remainingTemperatureSteps = (constants.MAX_TEMPERATURE - player.game.getTemperature()) / 2;
-    const remainingVenusSteps = (constants.MAX_VENUS_SCALE - player.game.getVenusScaleLevel()) / 2;
+    const remainingTemperatureSteps = (player.game.gameOptions.maxTemperature - player.game.getTemperature()) / 2;
+    const remainingVenusSteps = (player.game.gameOptions.maxVenus - player.game.getVenusScaleLevel()) / 2;
     const stepsRaised = Math.min(remainingTemperatureSteps, remainingVenusSteps, 2);
 
     if (PartyHooks.shouldApplyPolicy(player, PartyName.REDS, 'rp01')) {
@@ -85,10 +85,10 @@ export class Atmoscoop extends Card implements IProjectCard {
   }
 
   private temperatureIsMaxed(game: IGame) {
-    return game.getTemperature() === constants.MAX_TEMPERATURE;
+    return game.getTemperature() === game.gameOptions.maxTemperature;
   }
 
   private venusIsMaxed(game: IGame) {
-    return game.getVenusScaleLevel() === constants.MAX_VENUS_SCALE;
+    return game.getVenusScaleLevel() === game.gameOptions.maxVenus;
   }
 }

@@ -5,7 +5,6 @@ import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
-import {MAX_VENUS_SCALE} from '../../../common/constants';
 import {CardName} from '../../../common/cards/CardName';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
 import {CardRenderer} from '../render/CardRenderer';
@@ -39,7 +38,7 @@ export class RotatorImpacts extends Card implements IActionCard {
   }
 
   public canAct(player: IPlayer): boolean {
-    const venusMaxed = player.game.getVenusScaleLevel() === MAX_VENUS_SCALE;
+    const venusMaxed = player.game.getVenusScaleLevel() === player.game.gameOptions.maxVenus;
     const canSpendResource = this.resourceCount > 0 && !venusMaxed;
 
     return player.canAfford({cost: 6, titanium: true}) || (canSpendResource && player.canAfford({cost: 0, tr: {venus: 1}}));
@@ -51,7 +50,7 @@ export class RotatorImpacts extends Card implements IActionCard {
     const addResource = new SelectOption('Pay 6 M€ to add 1 asteroid to this card', 'Pay').andThen(() => this.addResource(player));
     const spendResource = new SelectOption('Remove 1 asteroid to raise Venus 1 step', 'Remove asteroid').andThen(() => this.spendResource(player));
 
-    if (this.resourceCount > 0 && player.game.getVenusScaleLevel() < MAX_VENUS_SCALE) {
+    if (this.resourceCount > 0 && player.game.getVenusScaleLevel() < player.game.gameOptions.maxVenus) {
       opts.push(spendResource);
     } else {
       return this.addResource(player);

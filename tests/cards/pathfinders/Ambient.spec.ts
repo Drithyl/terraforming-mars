@@ -5,7 +5,6 @@ import {TestPlayer} from '../../TestPlayer';
 import {testGame} from '../../TestGame';
 import {cast, fakeCard, runAllActions, setTemperature} from '../../TestingUtils';
 import {Tag} from '../../../src/common/cards/Tag';
-import {MAX_TEMPERATURE} from '../../../src/common/constants';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 import {SelectCard} from '../../../src/server/inputs/SelectCard';
 
@@ -52,36 +51,36 @@ describe('Ambient', function() {
 
   it('canAct', function() {
     player.heat = 7;
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(card.canAct(player)).is.false;
 
     player.heat = 8;
-    setTemperature(game, MAX_TEMPERATURE - 2);
+    setTemperature(game, game.gameOptions.maxTemperature - 2);
     expect(card.canAct(player)).is.false;
 
 
     player.heat = 8;
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
     expect(card.canAct(player)).is.true;
   });
 
   it('action', () => {
     player.heat = 9;
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     expect(player.getTerraformRating()).eq(20);
 
     card.action(player);
 
     expect(player.heat).eq(1);
-    expect(game.getTemperature()).eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).eq(21);
   });
 
   it('action is repeatable', () => {
     player.heat = 16;
-    setTemperature(game, MAX_TEMPERATURE);
+    setTemperature(game, game.gameOptions.maxTemperature);
 
     const getBlueActions = function() {
       const orOptions = cast(player.getActions(), OrOptions);
@@ -96,7 +95,7 @@ describe('Ambient', function() {
     getBlueActions()!.cb([card]);
 
     expect(player.heat).eq(8);
-    expect(game.getTemperature()).eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).eq(21);
 
     expect(getBlueActions()).is.undefined;
@@ -106,7 +105,7 @@ describe('Ambient', function() {
     getBlueActions()!.cb([card]);
 
     expect(player.heat).eq(0);
-    expect(game.getTemperature()).eq(MAX_TEMPERATURE);
+    expect(game.getTemperature()).eq(game.gameOptions.maxTemperature);
     expect(player.getTerraformRating()).eq(22);
 
     expect(getBlueActions()).is.undefined;
