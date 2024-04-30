@@ -82,6 +82,7 @@
               v-for="curSpace in getAllSpacesOnMars()"
               :key="curSpace.id"
               :space="curSpace"
+              :equatorLength="equatorLength"
               :aresExtension="aresExtension"
               :tileView="tileView"
               data-test="board-space"
@@ -511,7 +512,7 @@ export default Vue.extend({
       throw new Error('Board space not found by id \'' + spaceId + '\'');
     },
     getValuesForParameter(targetParameter: string): Array<GlobalParamLevel> {
-      const values = [];
+      const values:Array<GlobalParamLevel> = [];
       let startValue: number;
       let endValue: number;
       let step: number;
@@ -534,7 +535,7 @@ export default Vue.extend({
         break;
       case 'venus':
         startValue = constants.MIN_VENUS_SCALE;
-        endValue = this.maxVenusScale;
+        endValue = this.maxVenus;
         step = 2;
         curValue = this.venusScaleLevel;
         break;

@@ -10,7 +10,7 @@ import {CardName} from '../../common/cards/CardName';
 export class MarsBoard extends Board {
   private readonly edges: ReadonlyArray<Space>;
 
-  protected constructor(spaces: ReadonlyArray<Space>) {
+  protected constructor(spaces: ReadonlyArray<Space>, public override equatorLength: number = 9) {
     super(spaces);
     this.edges = this.computeEdges();
   }

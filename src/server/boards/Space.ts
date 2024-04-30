@@ -25,11 +25,6 @@ export type Space = {
   /** The bonuses granted to players when placing tiles NEXT TO this space. */
   adjacency?: AdjacencyBonus,
 
-  /** The x-coordinate of this space, or -1 if it is not the main board (e.g. colony) */
-  x: number;
-  /** The y-coordinate of this space, or -1 if it is not the main board (e.g. colony) */
-  y: number;
-
   /** The y-coordinate relative to the equator (longest) row. For instance,
    * if it's the row right above or right below the equator, this is 1. */
   yRelativeToEquator?: number;

@@ -171,7 +171,12 @@
                   :boardName ="game.gameOptions.boardName"
                   :oceans_count="game.oceans"
                   :oxygen_level="game.oxygenLevel"
-                  :temperature="game.temperature"></board>
+                  :temperature="game.temperature"
+                  :maxOxygen = "game.gameOptions.maxOxygen"
+                  :maxOceans = "game.gameOptions.maxOceans"
+                  :maxVenus = "game.gameOptions.maxVenus"
+                  :minTemperature = "game.gameOptions.minTemperature"
+                  :maxTemperature = "game.gameOptions.maxTemperature"></board>
             <MoonBoard v-if="game.gameOptions.moonExpansion" :model="game.moon"></MoonBoard>
             <div v-if="game.gameOptions.pathfindersExpansion">
               <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions"/>

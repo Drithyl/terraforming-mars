@@ -1,19 +1,22 @@
 import * as constants from './constants';
 import {IGame} from '../server/IGame';
 import {BoardName} from './boards/BoardName';
-import {BigBoard} from '../server/boards/BigBoard';
 import {GameOptionsModel} from './models/GameOptionsModel';
 import {GameOptions} from '@/server/game/GameOptions';
+import {IPlayer} from '@/server/IPlayer';
 
 function isBigGame(game: IGame): boolean;
 function isBigGame(gameOptions: GameOptions | GameOptionsModel): boolean;
+function isBigGame(boardName: BoardName): boolean;
 
 // If this is a non-big game, all global values will be as defined in constants
-function isBigGame(gameOrOptions: any): boolean {
-  if (gameOrOptions.gameOptions !== undefined) {
-    return gameOrOptions.gameOptions.boardName === BoardName.BIG;
+function isBigGame(gameOrOptionsOrBoardName: any): boolean {
+  if (gameOrOptionsOrBoardName.gameOptions !== undefined) {
+    return gameOrOptionsOrBoardName.gameOptions.boardName === BoardName.BIG;
+  } else if (gameOrOptionsOrBoardName.boardName !== undefined) {
+    return gameOrOptionsOrBoardName.boardName === BoardName.BIG;
   } else {
-    return gameOrOptions.boardName === BoardName.BIG;
+    return gameOrOptionsOrBoardName === BoardName.BIG;
   }
 }
 
@@ -97,27 +100,50 @@ export function getHeatForTemperature(game: IGame): number {
   return constants.HEAT_FOR_TEMPERATURE;
 }
 
-export function getMaxOceanTiles(game: IGame): number {
-  if (isBigGame(game) === false) {
+
+// One more ocean for each player
+export function getMaxOceanTiles(game: IGame): number;
+export function getMaxOceanTiles(gameOptions: GameOptions, players: Array<IPlayer>): number;
+export function getMaxOceanTiles(gameOrOptions: any, players?: Array<IPlayer>): number {
+  if (isBigGame(gameOrOptions) === false) {
     return constants.MAX_OCEAN_TILES;
   }
-  // One more ocean for each player
-  return constants.MAX_OCEAN_TILES + game.getPlayers().length;
+
+  if (players !== undefined) {
+    return constants.MAX_OCEAN_TILES + players.length;
+  } else {
+    return constants.MAX_OCEAN_TILES + gameOrOptions.getPlayers().length;
+  }
 }
 
-export function getMinTemperature(game: IGame): number {
-  if (isBigGame(game) === false) {
+export function getMinTemperature(game: IGame): number;
+export function getMinTemperature(gameOptions: GameOptions, players: Array<IPlayer>): number;
+export function getMinTemperature(gameOrOptions: any, players?: Array<IPlayer>): number {
+  if (isBigGame(gameOrOptions) === false) {
+    return constants.MAX_OCEAN_TILES;
+  }
+
+  if (players !== undefined) {
+    return constants.MIN_TEMPERATURE;
+  } else {
     return constants.MIN_TEMPERATURE;
   }
-  return constants.MIN_TEMPERATURE;
 }
 
-export function getMaxTemperature(game: IGame): number {
-  if (isBigGame(game) === false) {
+// One more temperature step for each player
+export function getMaxTemperature(game: IGame): number;
+export function getMaxTemperature(gameOptions: GameOptions, players: Array<IPlayer>): number;
+export function getMaxTemperature(gameOrOptions: any, players?: Array<IPlayer>): number {
+  if (isBigGame(gameOrOptions) === false) {
     return constants.MAX_TEMPERATURE;
   }
-  // One more temperature step for each player
-  return constants.MAX_TEMPERATURE + game.getPlayers().length;
+
+  // One more ocean for each player
+  if (players !== undefined) {
+    return constants.MAX_TEMPERATURE + players.length;
+  } else {
+    return constants.MAX_TEMPERATURE + gameOrOptions.getPlayers().length;
+  }
 }
 
 export function getMinOxygenLevel(game: IGame): number {
@@ -127,15 +153,19 @@ export function getMinOxygenLevel(game: IGame): number {
   return constants.MIN_OXYGEN_LEVEL;
 }
 
-export function getMaxOxygenLevel(game: IGame): number {
-  if (isBigGame(game) === false) {
+// One more oxygen step for every additional equator length over the default 9, as well as for each player
+export function getMaxOxygenLevel(game: IGame): number;
+export function getMaxOxygenLevel(gameOptions: GameOptions, players: Array<IPlayer>): number;
+export function getMaxOxygenLevel(gameOrOptions: any, players?: Array<IPlayer>): number {
+  if (isBigGame(gameOrOptions) === false) {
     return constants.MAX_OXYGEN_LEVEL;
   }
-  // One more oxygen step for every additional equator length
-  // over the default 9, as well as for each player
-  const board: BigBoard = game.board as BigBoard;
-  const sizeOverVanilla = board.equatorLength - 9;
-  return constants.MAX_OXYGEN_LEVEL + sizeOverVanilla + game.getPlayers().length;
+
+  if (players !== undefined) {
+    return constants.MAX_OXYGEN_LEVEL + players.length;
+  } else {
+    return constants.MAX_OXYGEN_LEVEL + gameOrOptions.getPlayers().length;
+  }
 }
 
 export function getMinVenusScale(game: IGame): number {
@@ -145,12 +175,19 @@ export function getMinVenusScale(game: IGame): number {
   return constants.MIN_VENUS_SCALE;
 }
 
-export function getMaxVenusScale(game: IGame): number {
-  if (isBigGame(game) === false) {
+// One more venus step for each player
+export function getMaxVenusScale(game: IGame): number;
+export function getMaxVenusScale(gameOptions: GameOptions, players: Array<IPlayer>): number;
+export function getMaxVenusScale(gameOrOptions: any, players?: Array<IPlayer>): number {
+  if (isBigGame(gameOrOptions) === false) {
     return constants.MAX_VENUS_SCALE;
   }
-  // One more venus step for each player
-  return constants.MAX_VENUS_SCALE + game.getPlayers().length;
+
+  if (players !== undefined) {
+    return constants.MAX_VENUS_SCALE + players.length;
+  } else {
+    return constants.MAX_VENUS_SCALE + gameOrOptions.getPlayers().length;
+  }
 }
 
 

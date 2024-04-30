@@ -1,4 +1,5 @@
 import * as responses from './responses';
+import * as constants from '../../common/constants';
 import {Handler} from './Handler';
 import {Context} from './IHandler';
 import {Database} from '../database/Database';
@@ -173,6 +174,13 @@ export class GameHandler extends Handler {
             startingCeos: gameReq.startingCeos,
             starWarsExpansion: gameReq.starWarsExpansion,
             underworldExpansion: gameReq.underworldExpansion,
+
+            // Initialize custom Global Parameters to default values
+            maxOceans: constants.MAX_OCEAN_TILES,
+            maxOxygen: constants.MAX_OXYGEN_LEVEL,
+            maxVenus: constants.MAX_VENUS_SCALE,
+            minTemperature: constants.MIN_TEMPERATURE,
+            maxTemperature: constants.MAX_TEMPERATURE,
           };
 
           let game: IGame;

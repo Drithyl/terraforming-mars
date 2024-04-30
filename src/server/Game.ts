@@ -1,5 +1,5 @@
 import * as constants from '../common/constants';
-import * as globalParameterCalculator from '@/common/GlobalParameterCalculator';
+import * as globalParameterCalculator from '../common/GlobalParameterCalculator';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
 import {Board} from './boards/Board';
 import {CardFinder} from './CardFinder';
@@ -247,6 +247,13 @@ export class Game implements IGame, Logger {
       players[0].setTerraformRating(14);
     }
 
+    // Initialize custom Global Parameters
+    gameOptions.maxOceans = globalParameterCalculator.getMaxOceanTiles(gameOptions, players);
+    gameOptions.maxOxygen = globalParameterCalculator.getMaxOxygenLevel(gameOptions, players);
+    gameOptions.maxVenus = globalParameterCalculator.getMaxVenusScale(gameOptions, players);
+    gameOptions.minTemperature = globalParameterCalculator.getMinTemperature(gameOptions, players);
+    gameOptions.maxTemperature = globalParameterCalculator.getMaxTemperature(gameOptions, players);
+
     const game = new Game(id, players, firstPlayer, activePlayer, gameOptions, rng, board, projectDeck, corporationDeck, preludeDeck, ceoDeck);
     game.spectatorId = spectatorId;
     // This evaluation of created time doesn't match what's stored in the database, but that's fine.
@@ -255,13 +262,6 @@ export class Game implements IGame, Logger {
     if (gameOptions.aresExtension) {
       game.aresData = AresSetup.initialData(gameOptions.aresHazards, players);
     }
-
-    // Initialize custom Global Parameters
-    gameOptions.maxOceans = globalParameterCalculator.getMaxOceanTiles(game);
-    gameOptions.maxOxygen = globalParameterCalculator.getMaxOxygenLevel(game);
-    gameOptions.maxVenus = globalParameterCalculator.getMaxVenusScale(game);
-    gameOptions.minTemperature = globalParameterCalculator.getMinTemperature(game);
-    gameOptions.maxTemperature = globalParameterCalculator.getMaxTemperature(game);
 
     const milestonesAwards = chooseMilestonesAndAwards(gameOptions);
     game.milestones = milestonesAwards.milestones;

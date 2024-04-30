@@ -242,7 +242,12 @@
             :aresExtension="game.gameOptions.aresExtension"
             :pathfindersExpansion="game.gameOptions.pathfindersExpansion"
             :aresData="game.aresData"
-            :altVenusBoard="game.gameOptions.altVenusBoard">
+            :altVenusBoard="game.gameOptions.altVenusBoard"
+            :maxOxygen = "game.gameOptions.maxOxygen"
+            :maxOceans = "game.gameOptions.maxOceans"
+            :maxVenus = "game.gameOptions.maxVenus"
+            :minTemperature = "game.gameOptions.minTemperature"
+            :maxTemperature = "game.gameOptions.maxTemperature">
           </board>
 
           <turmoil v-if="game.turmoil" :turmoil="game.turmoil"></turmoil>

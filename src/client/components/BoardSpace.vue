@@ -47,6 +47,9 @@ export default Vue.extend({
     space: {
       type: Object as () => SpaceModel,
     },
+    equatorLength: {
+      type: Number,
+    },
     text: {
       type: String,
     },
@@ -91,14 +94,14 @@ export default Vue.extend({
       }
 
       // Needed so compiler doesn't get grumpy, since the property is defined as optional
-      if (this.space.equatorLength === undefined) {
+      if (this.equatorLength === undefined) {
         console.error(`equatorLength is undefined on space with id ${this.space.id}`);
         return {};
       }
 
       // Length of the longest (middle) row in the planet. The placement of every tile
       // uses this as an anchor to align everything properly regardless of size
-      const equatorLength = this.space.equatorLength;
+      const equatorLength = this.equatorLength;
 
       // Initial position of any row on css left
       const xStart = 54 / equatorLength;

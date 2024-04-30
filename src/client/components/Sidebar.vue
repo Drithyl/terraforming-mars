@@ -8,7 +8,7 @@
     <div :class="'party-name party-name-indicator party-name--'+rulingPartyToCss()"> <span v-i18n>{{ getRulingParty() }}</span></div>
   </div>
   <div class="global_params">
-    <global-parameter-value :param="this.globalParameter.TEMPERATURE" :value="this.temperature" :min="this.minTemperature" :max="this.maxTemperature"></global-parameter-value>
+    <global-parameter-value :param="this.globalParameter.TEMPERATURE" :value="this.temperature" :max="this.maxTemperature"></global-parameter-value>
     <global-parameter-value :param="this.globalParameter.OXYGEN" :value="this.oxygen" :max="this.maxOxygen"></global-parameter-value>
     <global-parameter-value :param="this.globalParameter.OCEANS" :value="this.oceans" :max="this.maxOceans"></global-parameter-value>
     <global-parameter-value v-if="gameOptions.venusNextExtension" :param="this.globalParameter.VENUS" :value="this.venus" :max="this.maxVenus"></global-parameter-value>

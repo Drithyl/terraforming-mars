@@ -34,6 +34,9 @@ const attributes: Record<BaseGlobalParameter, {title: string, iconClass: string}
 export default Vue.extend({
   name: 'global-parameter-value',
   props: {
+    max: {
+      type: Number,
+    },
     param: {
       type: String as () => BaseGlobalParameter,
     },
@@ -43,7 +46,7 @@ export default Vue.extend({
   },
   computed: {
     isMax(): boolean {
-      return this.max;
+      return this.value === this.max;
     },
     title(): string {
       return attributes[this.param].title;
