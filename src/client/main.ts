@@ -13,6 +13,7 @@ declare global {
 
 async function bootstrap() {
   const lang = getPreferences().lang;
+  Vue.config.devtools = true;
 
   if (lang !== 'en') {
     try {
