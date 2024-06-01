@@ -120,7 +120,7 @@ export function getMinTemperature(game: IGame): number;
 export function getMinTemperature(gameOptions: GameOptions, players: Array<IPlayer>): number;
 export function getMinTemperature(gameOrOptions: any, players?: Array<IPlayer>): number {
   if (isBigGame(gameOrOptions) === false) {
-    return constants.MAX_OCEAN_TILES;
+    return constants.MIN_TEMPERATURE;
   }
 
   if (players !== undefined) {
