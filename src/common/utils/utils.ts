@@ -1,3 +1,4 @@
+import {Random} from './Random';
 import {OneOrArray} from './types';
 
 export const playerColorClass = (color: string, type: 'shadow' | 'bg' | 'bg_transparent'): string => {
@@ -121,4 +122,42 @@ export function zip<S, T>(first: ReadonlyArray<S>, second: ReadonlyArray<T>): Ar
  */
 export function asArray<T>(elem: OneOrArray<T>): Array<T> {
   return Array.isArray(elem) ? elem : [elem];
+}
+
+/**
+ * Returns a random element from a shallow copy of an array of a specific type.
+ * @param rng The random generator to use
+ * @param possibilities The array of possible items
+ * @returns an item within the provided array
+ */
+export function randomFromArray<T>(rng: Random, possibilities: Array<T>): T {
+  const randomIndex = Math.floor(rng.next() * possibilities.length);
+  const selected = [...possibilities][randomIndex];
+  return selected;
+}
+
+/**
+ * Returns an index from an array of weights relative to each other, i.e.:
+ * [ 25, 25, 20, 15, 15, 7]
+ * @param rng The random generator to use
+ * @param weights The array of weights, relative to each other
+ * @returns a valid index within the array
+ */
+export function randomWeighedIndex(rng: Random, weights: Array<number>): number {
+  const sumOfWeights = Math.floor(weights.reduce((total, curr) => total+curr, 0));
+  const random = Math.floor(rng.next() * sumOfWeights);
+  let sum = 0;
+  let selectedIndex = 0;
+
+  for (const w of weights) {
+    sum += w;
+
+    if (random <= sum) {
+      break;
+    } else {
+      selectedIndex++;
+    }
+  }
+
+  return selectedIndex;
 }

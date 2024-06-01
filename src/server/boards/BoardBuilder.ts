@@ -4,6 +4,7 @@ import {SpaceBonus} from '../../common/boards/SpaceBonus';
 import {SpaceName} from '../SpaceName';
 import {SpaceType} from '../../common/boards/SpaceType';
 import {Random} from '../../common/utils/Random';
+import {randomFromArray} from '../../common/utils/utils';
 
 function colonySpace(id: SpaceId): Space {
   return newSpace(id, SpaceType.COLONY, -1, -1, []);
@@ -41,6 +42,13 @@ export class BoardBuilder {
 
   land(...bonus: Array<SpaceBonus>): this {
     this.spaceTypes.push(SpaceType.LAND);
+    this.bonuses.push(bonus);
+    return this;
+  }
+
+  randomTerrain(rng:Random, types: Array<SpaceType>, ...bonus: Array<SpaceBonus>): this {
+    const randomTerrain = randomFromArray<SpaceType>(rng, (types.length) ? types : [SpaceType.LAND]);
+    this.spaceTypes.push(randomTerrain);
     this.bonuses.push(bonus);
     return this;
   }

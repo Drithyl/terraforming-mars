@@ -52,3 +52,15 @@ export namespace SpaceBonus {
     return TO_STRING_MAP[spaceBonus];
   }
 }
+
+/**
+ * Describes a random space bonus - its type (PLANT, STEEL, etc.),
+ * the maximum number of said bonus on a single space on Mars,
+ * and the weight it should have when being randomized with others,
+ * expressed as a number between 0 and 1.
+ */
+export type RandomSpaceBonus = {
+  type: SpaceBonus|null,
+  maxPerTile: number,
+  weight: number,
+};
