@@ -36,12 +36,25 @@ export class PublicSponsoredGrant extends Card implements IProjectCard {
   }
 
   public override bespokePlay(player: IPlayer) {
-    player.game.getPlayers().forEach((p) => p.stock.deduct(Resource.MEGACREDITS, Math.min(p.megaCredits, 2), {log: true, from: player}));
+    player.getOpponents().forEach((target) => {
+      target.maybeBlockAttack(player, (proceed) => {
+        if (proceed) {
+          target.stock.deduct(Resource.MEGACREDITS, Math.min(target.megaCredits, 2), {log: true, from: player});
+        }
+        return undefined;
+      });
+    });
 
     const tags = [...ALL_TAGS];
     inplaceRemove(tags, Tag.CITY);
     inplaceRemove(tags, Tag.WILD);
     inplaceRemove(tags, Tag.CLONE);
+
+    inplaceRemove(tags, Tag.EARTH);
+    inplaceRemove(tags, Tag.JOVIAN);
+    inplaceRemove(tags, Tag.VENUS);
+    inplaceRemove(tags, Tag.MOON);
+    inplaceRemove(tags, Tag.MARS);
 
     const options = tags.map((tag) => {
       return new SelectOption(tag).andThen(() => {

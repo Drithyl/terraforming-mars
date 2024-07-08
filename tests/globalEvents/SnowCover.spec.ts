@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {setTemperature} from '../TestingUtils';
-import {Game} from '../../src/server/Game';
+import {IGame} from '../../src/server/IGame';
 import {SnowCover} from '../../src/server/turmoil/globalEvents/SnowCover';
 import {Kelvinists} from '../../src/server/turmoil/parties/Kelvinists';
 import {Turmoil} from '../../src/server/turmoil/Turmoil';
@@ -11,7 +11,7 @@ describe('SnowCover', function() {
   let card: SnowCover;
   let player: TestPlayer;
   let player2: TestPlayer;
-  let game: Game;
+  let game: IGame;
   let turmoil: Turmoil;
 
   beforeEach(function() {

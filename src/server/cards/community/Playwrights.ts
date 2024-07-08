@@ -54,7 +54,7 @@ export class Playwrights extends CorporationCard {
     const replayableEvents = this.getReplayableEvents(player);
 
     return new SelectCard<IProjectCard>(
-      'Select event card to replay at cost in M€ and remove from play', 'Select', replayableEvents)
+      'Select event card to replay at cost in M€ and remove from play', 'Select', replayableEvents, {played: false})
       .andThen(
         ([card]) => {
           const selectedCard: IProjectCard = card;
@@ -117,7 +117,7 @@ export class Playwrights extends CorporationCard {
           };
           return card.type === CardType.EVENT &&
           // Can player.canPlay(card) replace this?
-          player.canAfford(canAffordOptions) && player.simpleCanPlay(card, canAffordOptions);
+          player.canAfford(canAffordOptions) && card.canPlay(player, canAffordOptions);
         }));
       });
     } finally {

@@ -23,4 +23,5 @@ export interface SerializedSpace {
   equatorLength?: number;
   undergroundResources?: UndergroundResourceToken;
   excavator?: PlayerId;
+  coOwner?: PlayerId;
 }

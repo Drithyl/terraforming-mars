@@ -98,14 +98,13 @@ export class Server {
     const thisPlayerIndex = players.findIndex((p) => p.color === player.color);
     const thisPlayer: PublicPlayerModel = players[thisPlayerIndex];
 
-    return {
+    const rv: PlayerViewModel = {
       cardsInHand: cardsToModel(player, player.cardsInHand, {showCalculatedCost: true}),
       ceoCardsInHand: cardsToModel(player, player.ceoCardsInHand),
       dealtCorporationCards: cardsToModel(player, player.dealtCorporationCards),
       dealtPreludeCards: cardsToModel(player, player.dealtPreludeCards),
       dealtCeoCards: cardsToModel(player, player.dealtCeoCards),
       dealtProjectCards: cardsToModel(player, player.dealtProjectCards),
-      draftedCorporations: cardsToModel(player, player.draftedCorporations),
       draftedCards: cardsToModel(player, player.draftedCards, {showCalculatedCost: true}),
       game: this.getGameModel(player.game),
       id: player.id,
@@ -115,7 +114,9 @@ export class Server {
       thisPlayer: thisPlayer,
       waitingFor: this.getWaitingFor(player, player.getWaitingFor()),
       players: players,
+      autopass: player.autopass,
     };
+    return rv;
   }
 
   public static getSpectatorModel(game: IGame): SpectatorModel {
@@ -133,8 +134,8 @@ export class Server {
     return player.getSelfReplicatingRobotsTargetCards().map((targetCard) => {
       const model: CardModel = {
         resources: targetCard.resourceCount,
-        name: targetCard.card.name,
-        calculatedCost: player.getCardCost(targetCard.card),
+        name: targetCard.name,
+        calculatedCost: player.getCardCost(targetCard),
         isSelfReplicatingRobotsCard: true,
       };
       return model;
@@ -254,6 +255,7 @@ export class Server {
       victoryPointsByGeneration: player.victoryPointsByGeneration,
       corruption: player.underworldData.corruption,
       excavations: UnderworldExpansion.excavationMarkerCount(player),
+      alliedParty: player.alliedParty,
     };
   }
 
@@ -320,14 +322,14 @@ export class Server {
     gagarin: ReadonlyArray<SpaceId> = [],
     cathedrals: ReadonlyArray<SpaceId> = [],
     nomads: SpaceId | undefined = undefined): Array<SpaceModel> {
-    const volcanicSpaceIds = board.getVolcanicSpaceIds();
-    const noctisCitySpaceIds = board.getNoctisCitySpaceId();
+    const volcanicSpaceIds = board.volcanicSpaceIds;
+    const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
       let highlight: SpaceHighlight = undefined;
       if (volcanicSpaceIds.includes(space.id)) {
         highlight = 'volcanic';
-      } else if (noctisCitySpaceIds === space.id) {
+      } else if (noctisCitySpaceId === space.id) {
         highlight = 'noctis';
       }
 
@@ -376,6 +378,9 @@ export class Server {
       if (space.excavator !== undefined) {
         model.excavator = space.excavator.color;
       }
+      if (space.coOwner !== undefined) {
+        model.coOwner = space.coOwner.color;
+      }
 
       return model;
     });
@@ -387,6 +392,7 @@ export class Server {
       aresExtension: options.aresExtension,
       boardName: options.boardName,
       bannedCards: options.bannedCards,
+      includedCards: options.includedCards,
       ceoExtension: options.ceoExtension,
       coloniesExtension: options.coloniesExtension,
       communityCardsOption: options.communityCardsOption,
@@ -403,6 +409,7 @@ export class Server {
       initialDraftVariant: options.initialDraftVariant,
       moonExpansion: options.moonExpansion,
       pathfindersExpansion: options.pathfindersExpansion,
+      preludeDraftVariant: options.preludeDraftVariant,
       preludeExtension: options.preludeExtension,
       prelude2Expansion: options.prelude2Expansion,
       promoCardsOption: options.promoCardsOption,

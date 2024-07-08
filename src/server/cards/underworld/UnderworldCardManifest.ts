@@ -26,7 +26,7 @@ import {CutThroatBudgeting} from './CutThroatBudgeting';
 import {Deepmining} from './Deepmining';
 import {Deepnuking} from './Deepnuking';
 import {DeepwaterDome} from './DeepwaterDome';
-// import {DemetronLabs} from './DemetronLabs';
+import {DemetronLabs} from './DemetronLabs';
 import {EarthquakeMachine} from './EarthquakeMachine';
 import {ElectionSponsorship} from './ElectionSponsorship';
 import {ExcavateStandardProject} from './ExcavateStandardProject';
@@ -36,8 +36,8 @@ import {FairTradeComplaint} from './FairTradeComplaint';
 import {FabricatedScandal} from './FabricatedScandal';
 import {ForestTunnels} from './ForestTunnels';
 import {FreeTradePort} from './FreeTradePort';
-// // import {FriendsinHighPlaces} from './FriendsinHighPlaces';
-// // import {GaiaCity} from './GaiaCity';
+import {FriendsInHighPlaces} from './FriendsInHighPlaces';
+import {GaiaCity} from './GaiaCity';
 import {GanymedeTradingCompany} from './GanymedeTradingCompany';
 import {GeologicalExpertise} from './GeologicalExpertise';
 import {GeologicalSurvey} from './GeologicalSurvey';
@@ -46,7 +46,7 @@ import {GeoscanSatellite} from './GeoscanSatellite';
 import {GeothermalNetwork} from './GeothermalNetwork';
 import {GlobalAudit} from './GlobalAudit';
 import {GreyMarketExploitation} from './GreyMarketExploitation';
-// // import {GuerillaEcologists} from './GuerillaEcologists';
+import {GuerillaEcologists} from './GuerillaEcologists';
 import {Hackers} from './Hackers';
 import {Hadesphere} from './Hadesphere';
 import {HecateSpeditions} from './HecateSpeditions';
@@ -80,7 +80,7 @@ import {MiningMarketInsider} from './MiningMarketInsider';
 import {Monopoly} from './Monopoly';
 import {Nanofoundry} from './Nanofoundry';
 import {NarrativeSpin} from './NarrativeSpin';
-// // import {Neutrinograph} from './Neutrinograph';
+import {Neutrinograph} from './Neutrinograph';
 import {Nightclubs} from './Nightclubs';
 import {OffWorldTaxHaven} from './OffWorldTaxHaven';
 import {OldWorldMafia} from './OldWorldMafia';
@@ -109,11 +109,11 @@ import {SpacePrivateers} from './SpacePrivateers';
 import {SpaceWargames} from './SpaceWargames';
 import {StagedProtests} from './StagedProtests';
 // import {StandardTechnology} from './StandardTechnology';
-// import {StarVegas} from './StarVegas';
+import {StarVegas} from './StarVegas';
 import {StemFieldSubsidies} from './StemFieldSubsidies';
 import {SubnauticPirates} from './SubnauticPirates';
 import {SubterraneanSea} from './SubterraneanSea';
-// // import {ThiolavaVents} from './ThiolavaVents';
+import {ThiolavaVents} from './ThiolavaVents';
 import {TitanManufacturingColony} from './TitanManufacturingColony';
 import {TunnelBoringMachine} from './TunnelBoringMachine';
 import {TunnelingOperation} from './TunnelingOperation';
@@ -121,14 +121,14 @@ import {TunnelingSubcontractor} from './TunnelingSubcontractor';
 import {UndergroundAmusementPark} from './UndergroundAmusementPark';
 import {UndergroundHabitat} from './UndergroundHabitat';
 import {UndergroundRailway} from './UndergroundRailway';
-// // import {UndergroundResearchCenter} from './UndergroundResearchCenter';
+import {UndergroundResearchCenter} from './UndergroundResearchCenter';
 import {UndergroundSettlement} from './UndergroundSettlement';
 import {UndergroundShelters} from './UndergroundShelters';
 import {UndergroundSmugglingRing} from './UndergroundSmugglingRing';
 import {Voltagon} from './Voltagon';
 import {VoltaicMetallurgy} from './VoltaicMetallurgy';
 import {VolunteerMiningInitiative} from './VolunteerMiningInitiative';
-// // import {Whales} from './Whales';
+import {Whales} from './Whales';
 
 export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
   module: 'underworld',
@@ -138,7 +138,7 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
     [CardName.GEOSCAN_SATELLITE]: {Factory: GeoscanSatellite},
     [CardName.TUNNEL_BORING_MACHINE]: {Factory: TunnelBoringMachine},
     [CardName.UNDERGROUND_RAILWAY]: {Factory: UndergroundRailway},
-    // // [CardName.GAIA_CITY]: {Factory: GaiaCity}, // Figure out the rules first
+    [CardName.GAIA_CITY]: {Factory: GaiaCity},
     [CardName.DEEPNUKING]: {Factory: Deepnuking},
     [CardName.OLD_WORLD_MAFIA]: {Factory: OldWorldMafia},
     [CardName.NIGHTCLUBS]: {Factory: Nightclubs},
@@ -178,10 +178,10 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
     [CardName.PRIVATE_INVESTIGATOR]: {Factory: PrivateInvestigator},
     [CardName.CORPORATE_BLACKMAIL]: {Factory: CorporateBlackmail},
     [CardName.SCAPEGOAT]: {Factory: Scapegoat},
-    // // [CardName.FRIENDS_IN_HIGH_PLACES]: {Factory: FriendsinHighPlaces}, // ANOTHER card payment thing.
+    [CardName.FRIENDS_IN_HIGH_PLACES]: {Factory: FriendsInHighPlaces},
     [CardName.MICROGRAVIMETRY]: {Factory: Microgravimetry},
     [CardName.STEM_FIELD_SUBSIDIES]: {Factory: StemFieldSubsidies},
-    [CardName.TITAN_MANUFACTURING_COLONY]: {Factory: TitanManufacturingColony}, // Special token
+    [CardName.TITAN_MANUFACTURING_COLONY]: {Factory: TitanManufacturingColony},
     [CardName.ROBOT_MOLES]: {Factory: RobotMoles},
     // 46-54
     [CardName.MINING_MARKET_INSIDER]: {Factory: MiningMarketInsider},
@@ -191,17 +191,17 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
     [CardName.SPACE_PRIVATEERS]: {Factory: SpacePrivateers},
     [CardName.PERSONAL_SPACECRUISER]: {Factory: PersonalSpacecruiser},
     [CardName.HYPERSPACE_DRIVE_PROTOTYPE]: {Factory: HyperspaceDrivePrototype},
-    // [CardName.STAR_VEGAS]: {Factory: StarVegas}, // Come back to this later. It's gonna break stuff.
+    [CardName.STAR_VEGAS]: {Factory: StarVegas},
     [CardName.PRIVATE_RESORTS]: {Factory: PrivateResorts},
     // 55-63
     [CardName.EARTHQUAKE_MACHINE]: {Factory: EarthquakeMachine},
     [CardName.MICRO_GEODESICS]: {Factory: MicroGeodesics},
-    // // [CardName.NEUTRINOGRAPH]: {Factory: Neutrinograph},
+    [CardName.NEUTRINOGRAPH]: {Factory: Neutrinograph},
     [CardName.SOIL_EXPORT]: {Factory: SoilExport},
     [CardName.ARTESIAN_AQUIFER]: {Factory: ArtesianAquifer},
     [CardName.CHEMICAL_FACTORY]: {Factory: ChemicalFactory},
     [CardName.CORPORATE_THEFT]: {Factory: CorporateTheft},
-    // // [CardName.UNDERGROUND_RESEARCH_CENTER]: {Factory: UndergroundResearchCenter}, // I want to take time to think about the tag rule.
+    [CardName.UNDERGROUND_RESEARCH_CENTER]: {Factory: UndergroundResearchCenter},
     [CardName.PRICE_WARS]: {Factory: PriceWars},
     // 64-72
     [CardName.ANTI_TRUST_CRACKDOWN]: {Factory: AntiTrustCrackdown},
@@ -230,9 +230,9 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
     [CardName.PLANETARY_RIGHTS_BUYOUT]: {Factory: PlanetaryRightsBuyout},
     // // [CardName.MEDIA_FRENZY]: {Factory: MediaFrenzy}, // Scoops is not quite clear yet.
     [CardName.INVESTIGATIVE_JOURNALISM]: {Factory: InvestigativeJournalism},
-    // // [CardName.WHALES]: {Factory: Whales}, // This is gonna be tricky.
-    // // [CardName.GUERILLA_ECOLOGISTS]: {Factory: GuerillaEcologists}, // IP.
-    // // [CardName.THIOLAVA_VENTS]: {Factory: ThiolavaVents}, // Uncomment when tests are more manageable. See Production.ts
+    [CardName.WHALES]: {Factory: Whales},
+    [CardName.GUERILLA_ECOLOGISTS]: {Factory: GuerillaEcologists},
+    [CardName.THIOLAVA_VENTS]: {Factory: ThiolavaVents},
 
     // // Replacements
     // [CardName.STANDARD_TECHNOLOGY_UNDERWORLD]: {Factory: StandardTechnology},
@@ -248,7 +248,7 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
 
   corporationCards: {
     [CardName.HADESPHERE]: {Factory: Hadesphere},
-    // [CardName.DEMETRON_LABS]: {Factory: DemetronLabs},
+    [CardName.DEMETRON_LABS]: {Factory: DemetronLabs},
     [CardName.JENSON_BOYLE_CO]: {Factory: JensonBoyleCo},
     [CardName.HENKEI_GENETICS]: {Factory: HenkeiGenetics},
     [CardName.ARBORIST_COLLECTIVE]: {Factory: ArboristCollective},
@@ -265,7 +265,7 @@ export const UNDERWORLD_CARD_MANIFEST = new ModuleManifest({
     [CardName.FREE_TRADE_PORT]: {Factory: FreeTradePort, compatibility: 'colonies'},
     [CardName.INVESTOR_PLAZA]: {Factory: InvestorPlaza},
     [CardName.INHERITED_FORTUNE]: {Factory: InheritedFortune},
-    // // [CardName.INTELLECTUAL_PROPERTY_THEFT]: {Factory: IntellectualPropertyTheft},
+    // // [CardName.INTELLECTUAL_PROPERTY_THEFT]: {Factory: IntellectualPropertyTheft}, // Too tricky
     [CardName.TUNNELING_OPERATION]: {Factory: TunnelingOperation},
     [CardName.GEOLOGICAL_EXPERTISE]: {Factory: GeologicalExpertise},
     [CardName.UNDERGROUND_SETTLEMENT]: {Factory: UndergroundSettlement},

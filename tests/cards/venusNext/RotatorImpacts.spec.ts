@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {cast, setVenusScaleLevel} from '../../TestingUtils';
 import {MorningStarInc} from '../../../src/server/cards/venusNext/MorningStarInc';
 import {RotatorImpacts} from '../../../src/server/cards/venusNext/RotatorImpacts';
-import {Game} from '../../../src/server/Game';
+import {IGame} from '../../../src/server/IGame';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 import {TestPlayer} from '../../TestPlayer';
 import {testGame} from '../../TestGame';
@@ -10,7 +10,7 @@ import {testGame} from '../../TestGame';
 describe('RotatorImpacts', () => {
   let card: RotatorImpacts;
   let player: TestPlayer;
-  let game: Game;
+  let game: IGame;
 
   beforeEach(() => {
     card = new RotatorImpacts();
@@ -19,26 +19,26 @@ describe('RotatorImpacts', () => {
 
   it('Cannot play', () => {
     setVenusScaleLevel(game, 16);
-    expect(player.simpleCanPlay(card)).is.not.true;
+    expect(card.canPlay(player)).is.not.true;
   });
 
   it('Can play', () => {
     setVenusScaleLevel(game, 14);
-    expect(player.simpleCanPlay(card)).is.true;
+    expect(card.canPlay(player)).is.true;
   });
 
   it('Should play', () => {
-    expect(player.simpleCanPlay(card)).is.true;
+    expect(card.canPlay(player)).is.true;
     cast(card.play(player), undefined);
   });
 
   it('Works with MSI corporation', () => {
     const corp = new MorningStarInc();
     corp.play(player);
-    player.setCorporationForTest(corp);
+    player.corporations.push(corp);
 
     setVenusScaleLevel(game, 18);
-    expect(player.simpleCanPlay(card)).is.true;
+    expect(card.canPlay(player)).is.true;
   });
 
   it('Should act', () => {

@@ -1,13 +1,9 @@
 import {SpaceBonus} from '../../common/boards/SpaceBonus';
 import {SpaceName} from '../SpaceName';
-import {Board} from './Board';
-import {CanAffordOptions, IPlayer} from '../IPlayer';
 import {Space} from './Space';
 import {BoardBuilder} from './BoardBuilder';
-import {SerializedBoard} from './SerializedBoard';
 import {Random} from '../../common/utils/Random';
 import {GameOptions} from '../game/GameOptions';
-import {SpaceId} from '../../common/Types';
 import {MarsBoard} from './MarsBoard';
 import increaseSize from './TharsisBoardSizeIncrease';
 
@@ -19,7 +15,6 @@ export class TharsisBoard extends MarsBoard {
     const STEEL = SpaceBonus.STEEL;
     const DRAW_CARD = SpaceBonus.DRAW_CARD;
     const TITANIUM = SpaceBonus.TITANIUM;
-    const TWO_PLANTS = [PLANT, PLANT];
 
     // y=0
     builder.land(STEEL, STEEL).ocean(STEEL, STEEL).land().ocean(DRAW_CARD).ocean();
@@ -28,12 +23,12 @@ export class TharsisBoard extends MarsBoard {
     // y=2
     builder.land(DRAW_CARD).land().land().land().land().land().land(STEEL);
     // y=3
-    builder.land(PLANT, TITANIUM).land(PLANT).land(PLANT).land(PLANT).land(...TWO_PLANTS).land(PLANT).land(PLANT).ocean(PLANT, PLANT);
+    builder.land(PLANT, TITANIUM).land(PLANT).land(PLANT).land(PLANT).land(PLANT, PLANT).land(PLANT).land(PLANT).ocean(PLANT, PLANT);
     // y=4
-    builder.land(...TWO_PLANTS).land(...TWO_PLANTS).land(...TWO_PLANTS).ocean(...TWO_PLANTS).ocean(...TWO_PLANTS)
-      .ocean(...TWO_PLANTS).land(...TWO_PLANTS).land(...TWO_PLANTS).land(...TWO_PLANTS);
+    builder.land(PLANT, PLANT).land(PLANT, PLANT).land(PLANT, PLANT).ocean(PLANT, PLANT).ocean(PLANT, PLANT)
+      .ocean(PLANT, PLANT).land(PLANT, PLANT).land(PLANT, PLANT).land(PLANT, PLANT);
     // y=5
-    builder.land(PLANT).land(...TWO_PLANTS).land(PLANT).land(PLANT).land(PLANT).ocean(PLANT).ocean(PLANT).ocean(PLANT);
+    builder.land(PLANT).land(PLANT, PLANT).land(PLANT).land(PLANT).land(PLANT).ocean(PLANT).ocean(PLANT).ocean(PLANT);
     // y=6
     builder.land().land().land().land().land().land(PLANT).land();
     // y=7
@@ -53,32 +48,12 @@ export class TharsisBoard extends MarsBoard {
     return new TharsisBoard(spaces);
   }
 
-  public static deserialize(board: SerializedBoard, players: ReadonlyArray<IPlayer>): TharsisBoard {
-    return new TharsisBoard(Board.deserializeSpaces(board.spaces, players));
-  }
-
-  public override getNonReservedLandSpaces(): ReadonlyArray<Space> {
-    return super.getNonReservedLandSpaces().filter((space) => space.id !== SpaceName.NOCTIS_CITY);
-  }
-
-  public override getAvailableSpacesOnLand(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    return super.getAvailableSpacesOnLand(player, canAffordOptions).filter((space) => space.id !== SpaceName.NOCTIS_CITY);
-  }
-
-  public override canPlaceTile(space: Space): boolean {
-    return super.canPlaceTile(space) && space.id !== SpaceName.NOCTIS_CITY;
-  }
-
-  public override getVolcanicSpaceIds(): ReadonlyArray<SpaceId> {
-    return [
+  public constructor(spaces: ReadonlyArray<Space>) {
+    super(spaces, SpaceName.NOCTIS_CITY, [
       SpaceName.ASCRAEUS_MONS,
       SpaceName.ARSIA_MONS,
       SpaceName.PAVONIS_MONS,
       SpaceName.THARSIS_THOLUS,
-    ];
-  }
-
-  public override getNoctisCitySpaceId() {
-    return SpaceName.NOCTIS_CITY;
+    ]);
   }
 }

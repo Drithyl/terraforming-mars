@@ -4,6 +4,7 @@ import {Color} from '../common/Color';
 import {SerializedCard} from './SerializedCard';
 import {SerializedTimer} from '../common/SerializedTimer';
 import {UnderworldPlayerData} from './underworld/UnderworldData';
+import {AlliedParty} from './turmoil/AlliedParty';
 
 interface DeprecatedFields {
 }
@@ -12,7 +13,11 @@ export interface SerializedPlayer extends DeprecatedFields{
     actionsTakenThisGame: number;
     actionsTakenThisRound: number;
     actionsThisGeneration: Array<CardName>;
+    alliedParty: AlliedParty | undefined;
+    // TODO(kberg): remove ? by 2024-10-01
+    autoPass?: boolean;
     beginner: boolean;
+    canUseCorruptionAsMegacredits: boolean;
     canUseHeatAsMegaCredits: boolean;
     canUseTitaniumAsMegacredits: boolean;
     canUsePlantsAsMegaCredits: boolean;
@@ -29,12 +34,12 @@ export interface SerializedPlayer extends DeprecatedFields{
     dealtPreludeCards: Array<CardName>;
     dealtProjectCards: Array<CardName>;
     draftedCards: Array<CardName>;
+    draftHand: Array<CardName>,
     energy: number;
     energyProduction: number;
     fleetSize: number;
     handicap: number;
-    // TODO(kberg): remove ? by 2024-01-30
-    hasIncreasedTerraformRatingThisGeneration?: boolean;
+    hasIncreasedTerraformRatingThisGeneration: boolean;
     hasTurmoilScienceTagBonus: boolean;
     heat: number;
     heatProduction: number;

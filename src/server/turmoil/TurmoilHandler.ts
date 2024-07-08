@@ -12,10 +12,9 @@ import {MARS_FIRST_POLICY_2} from './parties/MarsFirst';
 import {PartyHooks} from './parties/PartyHooks';
 import {PartyName} from '../../common/turmoil/PartyName';
 import {REDS_POLICY_2} from './parties/Reds';
-import {DynamicTRSource} from '../cards/ICard';
 import {MoonExpansion} from '../moon/MoonExpansion';
 import {TRSource} from '../../common/cards/TRSource';
-import {Policy, policyDescription} from './Policy';
+import {IPolicy, policyDescription} from './Policy';
 
 export class TurmoilHandler {
   private constructor() {}
@@ -25,7 +24,7 @@ export class TurmoilHandler {
     if (turmoil === undefined) {
       return undefined;
     }
-    const policy: Policy = turmoil.rulingPolicy();
+    const policy: IPolicy = turmoil.rulingPolicy();
     if (policy.canAct?.(player)) {
       return new SelectOption(policyDescription(policy, player), 'Pay').andThen(() => policy.action?.(player));
     }
@@ -86,12 +85,12 @@ export class TurmoilHandler {
 
   // TODO(kberg): Add a test where if you raise oxygen to max temperature but temperature is maxed you do not have to pay for it.
   // It works, but4 a test would be helpful.
-  public static computeTerraformRatingBump(player: IPlayer, inputTr: TRSource | DynamicTRSource = {}): number {
+  public static computeTerraformRatingBump(player: IPlayer, tr: TRSource = {}): number {
     if (!PartyHooks.shouldApplyPolicy(player, PartyName.REDS, 'rp01')) return 0;
 
-    let tr = inputTr instanceof Function ? inputTr(player) : inputTr;
-    // Local copy
+    // Making a local copy since it's going to get mutated.
     tr = {...tr};
+
     let total = 0;
 
     if (tr.oxygen !== undefined) {

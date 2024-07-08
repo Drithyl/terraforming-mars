@@ -1,4 +1,4 @@
-import {ICardMetadata} from '../../common/cards/ICardMetadata';
+import {CardMetadata} from '../../common/cards/CardMetadata';
 import {CardName} from '../../common/cards/CardName';
 import {CardType} from '../../common/cards/CardType';
 import {CardDiscount, GlobalParameterRequirementBonus} from '../../common/cards/Types';
@@ -8,7 +8,7 @@ import {Tag} from '../../common/cards/Tag';
 import {CanAffordOptions, IPlayer} from '../IPlayer';
 import {TRSource} from '../../common/cards/TRSource';
 import {Units} from '../../common/Units';
-import {DynamicTRSource, ICard} from './ICard';
+import {ICard} from './ICard';
 import {CardRenderDynamicVictoryPoints} from './render/CardRenderDynamicVictoryPoints';
 import {CardRenderItemType} from '../../common/cards/render/CardRenderItemType';
 import {IVictoryPoints} from '../../common/cards/IVictoryPoints';
@@ -51,14 +51,15 @@ type SharedProperties = {
   initialActionText?: string;
   firstAction?: Behavior & {text: string};
   globalParameterRequirementBonus?: GlobalParameterRequirementBonus;
-  metadata: ICardMetadata;
+  metadata: CardMetadata;
   requirements?: CardRequirementsDescriptor;
   name: CardName;
   resourceType?: CardResource;
   protectedResources?: boolean;
   startingMegaCredits?: number;
   tags?: Array<Tag>;
-  tr?: TRSource | DynamicTRSource,
+  /** Describes where the card's TR comes from. */
+  tr?: TRSource,
   victoryPoints?: number | 'special' | IVictoryPoints,
 }
 
@@ -86,7 +87,7 @@ const cardProperties = new Map<CardName, InternalProperties>();
  *    consumes very little memory.
  *
  * 2. It's key behavior is to provide a lot of the `canPlay` and `play` behavior currently
- *    in player.simpleCanPlay and player.simplePlay. These will eventually be removed and
+ *    in player.canPlay and player.play. These will eventually be removed and
  *    put right in here.
  *
  * In order to implement this default behavior, Card subclasses should ideally not
@@ -113,16 +114,22 @@ export abstract class Card implements ICard {
         throw new Error(`${name} must have a cost property`);
       }
     }
+    let step = 0;
     try {
       // TODO(kberg): apply these changes in CardVictoryPoints.vue and remove this conditional altogether.
       Card.autopopulateMetadataVictoryPoints(external);
 
-      validateBehavior(external.behavior);
-      validateBehavior(external.firstAction);
-      validateBehavior(external.action);
+      step = 1;
+      validateBehavior(external.behavior, name);
+      step = 2;
+      validateBehavior(external.firstAction, name);
+      step = 3;
+      validateBehavior(external.action, name);
+      step = 4;
       Card.validateTilesBuilt(external);
+      step = 5;
     } catch (e) {
-      throw new Error(`Cannot validate ${name}: ${e}`);
+      throw new Error(`Cannot validate ${name} (${step}): ${e}`);
     }
 
     const translatedRequirements = asArray(external.requirements ?? []).map((req) => populateCount(req));
@@ -212,7 +219,7 @@ export abstract class Card implements ICard {
   public get reserveUnits(): Units {
     return this.properties.reserveUnits || Units.EMPTY;
   }
-  public get tr(): TRSource | DynamicTRSource | undefined {
+  public get tr(): TRSource | undefined {
     return this.properties.tr;
   }
   public get victoryPoints(): number | 'special' | IVictoryPoints | undefined {
@@ -236,7 +243,7 @@ export abstract class Card implements ICard {
         return false;
       }
     }
-    const bespokeCanPlay = this.bespokeCanPlay(player, canAffordOptions);
+    const bespokeCanPlay = this.bespokeCanPlay(player, canAffordOptions ?? {cost: 0});
     if (bespokeCanPlay === false) {
       return false;
     }
@@ -247,7 +254,7 @@ export abstract class Card implements ICard {
     return true;
   }
 
-  public bespokeCanPlay(_player: IPlayer, _canAffordOptions?: CanAffordOptions): boolean {
+  public bespokeCanPlay(_player: IPlayer, _canAffordOptions: CanAffordOptions): boolean {
     return true;
   }
 
@@ -299,24 +306,14 @@ export abstract class Card implements ICard {
     let units: number | undefined = 0;
 
     switch (vps.item?.type) {
-    case CardRenderItemType.MICROBES:
-    case CardRenderItemType.ANIMALS:
-    case CardRenderItemType.FIGHTER:
-    case CardRenderItemType.FLOATERS:
-    case CardRenderItemType.ASTEROIDS:
-    case CardRenderItemType.PRESERVATION:
-    case CardRenderItemType.DATA_RESOURCE:
-    case CardRenderItemType.RESOURCE_CUBE:
-    case CardRenderItemType.SCIENCE:
-    case CardRenderItemType.CAMPS:
-      units = this.resourceCount ?? 0;
+    case CardRenderItemType.RESOURCE:
+      units = this.resourceCount;
       break;
-
-    case CardRenderItemType.JOVIAN:
-      units = player?.tags.count(Tag.JOVIAN, 'raw');
-      break;
-    case CardRenderItemType.MOON:
-      units = player?.tags.count(Tag.MOON, 'raw');
+    case CardRenderItemType.TAG:
+      if (vps.item.tag === undefined) {
+        throw new Error('tag attribute missing');
+      }
+      units = player.tags.count(vps.item.tag, 'raw');
       break;
     }
 
@@ -398,7 +395,7 @@ export abstract class Card implements ICard {
       return 0;
     }
     let sum = 0;
-    const discounts = Array.isArray(this.cardDiscount) ? this.cardDiscount : [this.cardDiscount];
+    const discounts = asArray(this.cardDiscount);
     for (const discount of discounts) {
       if (discount.tag === undefined) {
         sum += discount.amount;
@@ -459,10 +456,10 @@ function populateCount(requirement: CardRequirementDescriptor): CardRequirementD
   return requirement;
 }
 
-export function validateBehavior(behavior: Behavior | undefined) : void {
+export function validateBehavior(behavior: Behavior | undefined, name: CardName) : void {
   function validate(condition: boolean, error: string) {
     if (condition === false) {
-      throw new Error(error);
+      throw new Error(`for ${name}: ${error}`);
     }
   }
   if (behavior === undefined) {

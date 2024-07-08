@@ -1,10 +1,9 @@
 import {IParty} from './IParty';
 import {Party} from './Party';
 import {PartyName} from '../../../common/turmoil/PartyName';
-import {IGame} from '../../IGame';
 import {Resource} from '../../../common/Resource';
 import {Bonus} from '../Bonus';
-import {Policy} from '../Policy';
+import {IPolicy} from '../Policy';
 import {IPlayer} from '../../IPlayer';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
 import {CardName} from '../../../common/cards/CardName';
@@ -16,7 +15,7 @@ export class Kelvinists extends Party implements IParty {
   readonly policies = [KELVINISTS_POLICY_1, KELVINISTS_POLICY_2, KELVINISTS_POLICY_3, KELVINISTS_POLICY_4];
 }
 
-class KelvinistsBonus01 implements Bonus {
+class KelvinistsBonus01 extends Bonus {
   readonly id = 'kb01' as const;
   readonly description = 'Gain 1 M€ for each heat production you have';
 
@@ -24,14 +23,12 @@ class KelvinistsBonus01 implements Bonus {
     return player.production.heat;
   }
 
-  grant(game: IGame) {
-    game.getPlayersInGenerationOrder().forEach((player) => {
-      player.stock.add(Resource.MEGACREDITS, this.getScore(player));
-    });
+  grantForPlayer(player: IPlayer): void {
+    player.stock.add(Resource.MEGACREDITS, this.getScore(player));
   }
 }
 
-class KelvinistsBonus02 implements Bonus {
+class KelvinistsBonus02 extends Bonus {
   readonly id = 'kb02' as const;
   readonly description = 'Gain 1 heat for each heat production you have';
 
@@ -39,14 +36,12 @@ class KelvinistsBonus02 implements Bonus {
     return player.production.heat;
   }
 
-  grant(game: IGame) {
-    game.getPlayersInGenerationOrder().forEach((player) => {
-      player.stock.add(Resource.HEAT, this.getScore(player));
-    });
+  grantForPlayer(player: IPlayer): void {
+    player.stock.add(Resource.HEAT, this.getScore(player));
   }
 }
 
-class KelvinistsPolicy01 implements Policy {
+class KelvinistsPolicy01 implements IPolicy {
   readonly id = 'kp01' as const;
   description(player: IPlayer | undefined): string {
     const cost = player === undefined ? 10 : this.cost(player);
@@ -74,12 +69,12 @@ class KelvinistsPolicy01 implements Policy {
   }
 }
 
-class KelvinistsPolicy02 implements Policy {
+class KelvinistsPolicy02 implements IPolicy {
   readonly id = 'kp02' as const;
   readonly description = 'When you raise temperature, gain 3 M€ per step raised';
 }
 
-class KelvinistsPolicy03 implements Policy {
+class KelvinistsPolicy03 implements IPolicy {
   readonly id = 'kp03' as const;
   readonly description = 'Convert 6 heat into temperature (Turmoil Kelvinists)';
 
@@ -99,7 +94,7 @@ class KelvinistsPolicy03 implements Policy {
   }
 }
 
-class KelvinistsPolicy04 implements Policy {
+class KelvinistsPolicy04 implements IPolicy {
   readonly id = 'kp04' as const;
   readonly description = 'When you place a tile, gain 2 heat';
 
