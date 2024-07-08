@@ -1,4 +1,4 @@
-import * as responses from './responses';
+import * as responses from '../server/responses';
 import * as constants from '../../common/constants';
 import {Handler} from './Handler';
 import {Context} from './IHandler';
