@@ -44,9 +44,11 @@ export class TharsisBoard extends MarsBoard {
     if (gameOptions.shuffleMapOption) {
       builder.shuffle(rng, SpaceName.NOCTIS_CITY, SpaceName.THARSIS_THOLUS, SpaceName.ASCRAEUS_MONS, SpaceName.ARSIA_MONS, SpaceName.PAVONIS_MONS);
     }
+
     if (gameOptions.increaseBoardSize !== 0) {
       increaseSize(rng, builder, gameOptions.increaseBoardSize);
     }
+
     const spaces = builder.build();
     return new TharsisBoard(spaces);
   }

@@ -8,6 +8,7 @@ import {Random} from '../../common/utils/Random';
 import {GameOptions} from '../game/GameOptions';
 import {SpaceId} from '../../common/Types';
 import {MarsBoard} from './MarsBoard';
+import increaseSize from './AmazonisBoardSizeIncrease';
 
 export class AmazonisBoard extends MarsBoard {
   public static newInstance(gameOptions: GameOptions, rng: Random): AmazonisBoard {
@@ -43,6 +44,10 @@ export class AmazonisBoard extends MarsBoard {
 
     if (gameOptions.shuffleMapOption) {
       builder.shuffle(rng, SpaceName.MEDUSAE_FOSSAE, SpaceName.ALBOR_THOLUS, SpaceName.ANSERIS_MONS, SpaceName.PINDUS_MONS, SpaceName.ULYSSES_THOLUS);
+    }
+
+    if (gameOptions.increaseBoardSize !== 0) {
+      increaseSize(rng, builder, gameOptions.increaseBoardSize);
     }
 
     const spaces = builder.build();
