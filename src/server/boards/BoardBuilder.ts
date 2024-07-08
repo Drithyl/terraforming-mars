@@ -6,6 +6,7 @@ import {SpaceType} from '../../common/boards/SpaceType';
 import {Random} from '../../common/utils/Random';
 import {inplaceShuffle} from '../utils/shuffle';
 import {randomFromArray} from '../../common/utils/utils';
+import { ORIGINAL_EQUATOR_LENGTH } from '@/common/constants';
 
 function colonySpace(id: SpaceId): Space {
   return {id, spaceType: SpaceType.COLONY, x: -1, y: -1, bonus: []};
@@ -23,6 +24,7 @@ export class BoardBuilder {
   private bonuses: Array<Array<SpaceBonus>> = [];
   private spaces: Array<Space> = [];
   private unshufflableSpaces: Array<number> = [];
+  private equatorLength: number = ORIGINAL_EQUATOR_LENGTH;
 
   constructor(private includeVenus: boolean, private includePathfinders: boolean) {
   }
@@ -143,13 +145,16 @@ export class BoardBuilder {
       for (let i = 0; i < tilesInThisRow; i++) {
         const spaceId = 100 + idx;
         const xCoordinate = xOffset + i;
-        const space = {
+        const yRelativeToEquator = rowCountHalved - row;
+        const space: Space = {
           id: BoardBuilder.spaceId(spaceId),
           spaceType: this.spaceTypes[idx],
           x: xCoordinate,
           y: row,
           bonus: this.bonuses[idx],
         };
+        space.yRelativeToEquator = yRelativeToEquator;
+        space.equatorLength = this.equatorLength;
         this.spaces.push(space);
         idx++;
       }

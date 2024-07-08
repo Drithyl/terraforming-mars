@@ -9,6 +9,7 @@ export const DEFAULT_TITANIUM_VALUE = 3;
 export const FLOATERS_VALUE = 3;
 export const MICROBES_VALUE = 2;
 export const OCEAN_BONUS = 2;
+export const ORIGINAL_EQUATOR_LENGTH = 9;
 
 // Global parameters
 export const HEAT_FOR_TEMPERATURE = 8;
@@ -43,7 +44,6 @@ export const REDS_RULING_POLICY_COST = 3;
 export const POLITICAL_AGENDAS_MAX_ACTION_USES = 3;
 
 // Promo
-
 export const GRAPHENE_VALUE = 4;
 
 // Map specific

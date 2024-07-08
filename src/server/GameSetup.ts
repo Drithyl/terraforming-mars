@@ -1,6 +1,5 @@
 import {MarsBoard} from './boards/MarsBoard';
 import {BoardName} from '../common/boards/BoardName';
-import {BigBoard} from './boards/BigBoard';
 import {ElysiumBoard} from './boards/ElysiumBoard';
 import {IGame} from './IGame';
 import {GameOptions} from './game/GameOptions';
@@ -37,7 +36,6 @@ const boards: Record<BoardName, BoardFactory> = {
   [BoardName.ARABIA_TERRA]: ArabiaTerraBoard,
   [BoardName.TERRA_CIMMERIA]: TerraCimmeriaBoard,
   [BoardName.VASTITAS_BOREALIS]: VastitasBorealisBoard,
-  [BoardName.BIG]: BigBoard,
 };
 
 export class GameSetup {

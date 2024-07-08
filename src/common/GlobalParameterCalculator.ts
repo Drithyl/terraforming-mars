@@ -1,22 +1,21 @@
 import * as constants from './constants';
 import {IGame} from '../server/IGame';
-import {BoardName} from './boards/BoardName';
 import {GameOptionsModel} from './models/GameOptionsModel';
 import {GameOptions} from '@/server/game/GameOptions';
 import {IPlayer} from '@/server/IPlayer';
 
 function isBigGame(game: IGame): boolean;
 function isBigGame(gameOptions: GameOptions | GameOptionsModel): boolean;
-function isBigGame(boardName: BoardName): boolean;
+function isBigGame(increaseBoardSizeOption: number): boolean;
 
 // If this is a non-big game, all global values will be as defined in constants
-function isBigGame(gameOrOptionsOrBoardName: any): boolean {
-  if (gameOrOptionsOrBoardName.gameOptions !== undefined) {
-    return gameOrOptionsOrBoardName.gameOptions.boardName === BoardName.BIG;
-  } else if (gameOrOptionsOrBoardName.boardName !== undefined) {
-    return gameOrOptionsOrBoardName.boardName === BoardName.BIG;
+function isBigGame(gameOrOptionsOrIncreaseBoardSizeOption: any): boolean {
+  if (gameOrOptionsOrIncreaseBoardSizeOption.gameOptions !== undefined) {
+    return gameOrOptionsOrIncreaseBoardSizeOption.gameOptions.increaseBoardSize > 0;
+  } else if (gameOrOptionsOrIncreaseBoardSizeOption.increaseBoardSize !== undefined) {
+    return gameOrOptionsOrIncreaseBoardSizeOption.increaseBoardSize > 0;
   } else {
-    return gameOrOptionsOrBoardName === BoardName.BIG;
+    return gameOrOptionsOrIncreaseBoardSizeOption > 0;
   }
 }
 

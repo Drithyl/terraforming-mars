@@ -614,7 +614,6 @@ export default (Vue as WithRefs<Refs>).extend({
         BoardName.AMAZONIS,
         BoardName.TERRA_CIMMERIA,
         BoardName.VASTITAS_BOREALIS,
-        BoardName.BIG,
         RandomBoardOption.ALL,
       ],
       seed: Math.random(),
