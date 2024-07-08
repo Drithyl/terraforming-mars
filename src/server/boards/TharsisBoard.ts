@@ -9,6 +9,7 @@ import {Random} from '../../common/utils/Random';
 import {GameOptions} from '../game/GameOptions';
 import {SpaceId} from '../../common/Types';
 import {MarsBoard} from './MarsBoard';
+import increaseSize from './TharsisBoardSizeIncrease';
 
 export class TharsisBoard extends MarsBoard {
   public static newInstance(gameOptions: GameOptions, rng: Random): TharsisBoard {
@@ -42,6 +43,9 @@ export class TharsisBoard extends MarsBoard {
 
     if (gameOptions.shuffleMapOption) {
       builder.shuffle(rng, SpaceName.NOCTIS_CITY, SpaceName.THARSIS_THOLUS, SpaceName.ASCRAEUS_MONS, SpaceName.ARSIA_MONS, SpaceName.PAVONIS_MONS);
+    }
+    if (gameOptions.increaseBoardSize !== 0) {
+      increaseSize(rng, builder, gameOptions.increaseBoardSize);
     }
     const spaces = builder.build();
     return new TharsisBoard(spaces);
