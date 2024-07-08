@@ -20,7 +20,7 @@ export function isSpectatorId(object: string): object is SpectatorId {
 }
 
 export function isSpaceId(object: string): object is SpaceId {
-  return /^m?[0-9][0-9]$/.test(object);
+  return /^m?[0-9][0-9][0-9]?$/.test(object);
 }
 
 export function safeCast<T>(object: any, tester: (object: any) => object is T) {
