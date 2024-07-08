@@ -61,6 +61,7 @@ export interface NewGameConfig {
   draftVariant: boolean;
   // initialDraftVariant: boolean;
   startingCorporations: number;
+  increaseBoardSize: number;
   shuffleMapOption: boolean;
   randomMA: RandomMAOptionType;
   includeFanMA: boolean,

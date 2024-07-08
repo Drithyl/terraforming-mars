@@ -1,6 +1,6 @@
 import {Space, newSpace} from './Space';
 import {SpaceId} from '../../common/Types';
-import {SpaceBonus} from '../../common/boards/SpaceBonus';
+import {RandomSpaceBonusPossibilities, SpaceBonus} from '../../common/boards/SpaceBonus';
 import {SpaceName} from '../SpaceName';
 import {SpaceType} from '../../common/boards/SpaceType';
 import {Random} from '../../common/utils/Random';
@@ -46,7 +46,7 @@ export class BoardBuilder {
     return this;
   }
 
-  randomTerrain(rng:Random, types: Array<SpaceType>, ...bonus: Array<SpaceBonus>): this {
+  randomTerrain(rng: Random, types: Array<SpaceType>, ...bonus: Array<SpaceBonus>): this {
     const randomTerrain = randomFromArray<SpaceType>(rng, (types.length) ? types : [SpaceType.LAND]);
     this.spaceTypes.push(randomTerrain);
     this.bonuses.push(bonus);
@@ -62,6 +62,73 @@ export class BoardBuilder {
   doNotShuffleLastSpace(): this {
     this.unshufflableSpaces.push(this.spaceTypes.length - 1);
     return this;
+  }
+
+  /**
+   * Pad the spaces of the board with additional, randomly-generated rings to make it bigger. This
+   * modifies the original spaceTypes and bonuses properties of the BoardBuilder instance.
+   * @param rng - the Random instance for the random numbers
+   * @param padding - padding = 1 means one extra ring of tiles
+   * @param possibleRandomTerrains - a list of the terrains that can be included in the padded spaces
+   * @param possibleRandomBonuses - a list of the bonuses that can be generated in the padded spaces
+   */
+  padRandom(rng: Random, padding: number, possibleRandomTerrains: Array<SpaceType>, possibleRandomBonuses: RandomSpaceBonusPossibilities) {
+    // Store the original size of the board (the number of rows is equal to the number of tiles in the equator)
+    const originalNumberOfRows = this.equatorLength;
+
+    // New number of rows with the padding - 1 padding adds two rows (top and bottom)
+    const totalRowsWithPadding = originalNumberOfRows + (padding * 2);
+
+    // Copy the original space and bonus data of the board
+    const originalSpaceTypes: Array<SpaceType> = [...this.spaceTypes];
+    const originalBonuses: SpaceBonus[][] = [...this.bonuses];
+
+    if (padding === 0) {
+      return;
+    }
+
+    // Reset previous space types and bonuses to rebuild them with the padding
+    this.spaceTypes = [];
+    this.bonuses = [];
+
+    // Update equator length to new padded size (padding is applied to the front and end of rows, hence * 2)
+    this.equatorLength += padding * 2;
+
+    // Work out the number of tiles in each row number based on the new equator length
+    const tilesPerRow = this.getTilesPerRow(this.equatorLength);
+
+    // Iterate through all rows
+    for (let row = 0; row < totalRowsWithPadding; row++) {
+      const tilesInThisRow = tilesPerRow[row];
+
+      // If this row is a new one created by the padding...
+      if (row < padding) {
+        // ...generate all of its tiles as random ones, since this row did not exist in the original size
+        for (let i = 0; i < tilesInThisRow; i++) {
+          this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+        }
+      // If this row is within the original number of rows...
+      } else if (row >= padding && row < padding + originalNumberOfRows) {
+        // ...iterate through all the tiles this row will now have, padding included
+        for (let i = 0; i < tilesInThisRow; i++) {
+          // If this tile is part of the padding, randomize the tile
+          if (i < padding) this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+          else if (i >= tilesInThisRow - padding) this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+          // If the tile is not the padding at the front or back, then it's a tile that existed in the original board.
+          // Extract it from the original structures and add it to our new list of spaces and bonuses
+          else {
+            this.spaceTypes.push(...originalSpaceTypes.splice(0, 1));
+            this.bonuses.push(...originalBonuses.splice(0, 1));
+          }
+        }
+      // Another new row created by the padding, but at the bottom of the board
+      } else {
+        // Generate all of its tiles as random ones, since this row did not exist in the original size
+        for (let i = 0; i < tilesInThisRow; i++) {
+          this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+        }
+      }
+    }
   }
 
   build(): Array<Space> {

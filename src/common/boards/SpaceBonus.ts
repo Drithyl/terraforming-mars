@@ -2,6 +2,9 @@
 // as its number. Would have been better if this was stored as a string, but that ship has sailed,
 // for now.
 
+import {Random} from '../utils/Random';
+import {randomWeighedIndex} from '../utils/utils';
+
 export enum SpaceBonus {
     TITANIUM, // 0
     STEEL, // 1
@@ -61,6 +64,37 @@ export namespace SpaceBonus {
  */
 export type RandomSpaceBonus = {
   type: SpaceBonus|null,
+  minPerTile: number,
   maxPerTile: number,
   weight: number,
 };
+
+/**
+ * Describes a list of possible random space bonuses to pick from.
+ */
+export class RandomSpaceBonusPossibilities {
+  possibilities: Array<RandomSpaceBonus>;
+
+  constructor(...bonuses: Array<RandomSpaceBonus>) {
+    this.possibilities = bonuses;
+  }
+
+  pickRandom(rng: Random): Array<SpaceBonus> {
+    const weights = this.possibilities.map((b) => b.weight);
+    const selectedIndex = randomWeighedIndex(rng, weights);
+    const selectedBonus = this.possibilities[selectedIndex];
+    const randomAmount = Math.floor(rng.next() * (selectedBonus.maxPerTile - selectedBonus.minPerTile) + selectedBonus.minPerTile);
+
+    return new Array(randomAmount).fill(selectedBonus.type);
+  }
+
+  pickNRandom(rng: Random, numberOfBonusesToPick: number): Array<SpaceBonus> {
+    const bonuses = new Array(numberOfBonusesToPick);
+
+    for (let i = 0; i < numberOfBonusesToPick; i++) {
+      bonuses[i] = this.pickRandom(rng);
+    }
+
+    return bonuses;
+  }
+}

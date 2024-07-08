@@ -34,6 +34,7 @@ export interface CreateGameModel {
   seed: number;
   solarPhaseOption: boolean;
   shuffleMapOption: boolean;
+  increaseBoardSize: number;
   promoCardsOption: boolean;
   communityCardsOption: boolean;
   aresExtension: boolean;

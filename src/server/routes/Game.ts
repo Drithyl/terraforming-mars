@@ -151,6 +151,7 @@ export class GameHandler extends Handler {
             draftVariant: gameReq.draftVariant,
             initialDraftVariant: gameReq.initialDraft,
             startingCorporations: gameReq.startingCorporations,
+            increaseBoardSize: +gameReq.increaseBoardSize,
             shuffleMapOption: gameReq.shuffleMapOption,
             randomMA: gameReq.randomMA,
             includeFanMA: gameReq.includeFanMA,

@@ -99,6 +99,7 @@ function simpleGameOptions(): GameOptions {
     initialDraftVariant: false,
     showTimers: false,
     startingCorporations: 0,
+    increaseBoardSize: 0,
 
     // The options that can change, should be parameters.
     boardName: BoardName.THARSIS,

@@ -42,6 +42,7 @@ export type GameOptions = {
   initialDraftVariant: boolean;
   // corporationsDraft: boolean;
   startingCorporations: number;
+  increaseBoardSize: number;
   shuffleMapOption: boolean;
   randomMA: RandomMAOptionType;
   includeFanMA: boolean;
@@ -115,6 +116,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   soloTR: false,
   startingCeos: 3,
   startingCorporations: 2,
+  increaseBoardSize: 0,
   starWarsExpansion: false,
   turmoilExtension: false,
   underworldExpansion: false,

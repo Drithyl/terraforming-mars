@@ -255,6 +255,11 @@
                               </label>
                             </template>
 
+                            <label for="increaseBoardSize-checkbox">
+                            <input type="number" class="create-game-corporations-count" value="0" min="0" :max="2" v-model="increaseBoardSize" id="increaseBoardSize-checkbox">
+                                <span v-i18n>Increase board radius</span>
+                            </label>
+
                             <input type="checkbox" v-model="shuffleMapOption" id="shuffleMap-checkbox">
                             <label for="shuffleMap-checkbox">
                                     <span v-i18n>Randomize board tiles</span>&nbsp;<a href="https://github.com/terraforming-mars/terraforming-mars/wiki/Variants#randomize-board-tiles" class="tooltip" target="_blank">&#9432;</a>
@@ -578,6 +583,7 @@ export default (Vue as WithRefs<Refs>).extend({
       seed: Math.random(),
       seededGame: false,
       solarPhaseOption: false,
+      increaseBoardSize: 0,
       shuffleMapOption: false,
       promoCardsOption: false,
       communityCardsOption: false,
@@ -957,6 +963,7 @@ export default (Vue as WithRefs<Refs>).extend({
       const colonies = this.colonies;
       const turmoil = this.turmoil;
       const solarPhaseOption = this.solarPhaseOption;
+      const increaseBoardSize = +this.increaseBoardSize;
       const shuffleMapOption = this.shuffleMapOption;
       const customColonies = this.customColonies;
       const customCorporations = this.customCorporations;
@@ -1142,6 +1149,7 @@ export default (Vue as WithRefs<Refs>).extend({
         clonedGamedId,
         initialDraft,
         randomMA,
+        increaseBoardSize,
         shuffleMapOption,
         // beginnerOption,
         randomFirstPlayer,
