@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <div class="board board-debug" id="main_board">
+        <div class="board" id="main_board">
             <board-space
               v-for="curSpace in getAllSpacesOnMars()"
               :key="curSpace.id"
