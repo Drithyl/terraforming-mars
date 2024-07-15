@@ -713,7 +713,7 @@ export default Vue.extend({
       }
     },
     getGameBoardClassName(): string {
-      return this.venusNextExtension ? 'board-cont board-smoothed-with-venus' : 'board-cont board-smoothed-without-venus';
+      return this.venusNextExtension ? 'board-cont board-smoothed-with-venus' : 'board-cont board-smoothed-with-venus';
     },
     setBoardWidth(): object {
       const equatorLength = this.equatorLength;
