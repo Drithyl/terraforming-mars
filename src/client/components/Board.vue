@@ -26,15 +26,24 @@
 
         <div class="global-numbers">
             <div class="global-numbers-temperature">
-                <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('temperature')" :key="idx" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}</div>
+                <div v-for="(lvl, idx) in getValuesForParameter('temperature')" :key="idx" :class="getScaleCSS(lvl)" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}
+                  <div v-if="lvl.hasBonus() === true" :class="'global-parameter-arrow global-temperature-arrow'"></div>
+                  <div v-if="lvl.hasBonus() === true" :class="lvl.getCssClass()"></div>
+                </div>
             </div>
 
             <div class="global-numbers-oxygen">
-                <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('oxygen')" :key="idx" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}</div>
+                <div v-for="(lvl, idx) in getValuesForParameter('oxygen')" :key="idx" :class="getScaleCSS(lvl)" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}
+                  <div v-if="lvl.hasBonus() === true" :class="'global-parameter-arrow global-oxygen-arrow'"></div>
+                  <div v-if="lvl.hasBonus() === true" :class="lvl.getCssClass()"></div>
+                </div>
             </div>
 
             <div class="global-numbers-venus" v-if="venusNextExtension">
-                <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('venus')" :key="idx" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}</div>
+                <div v-for="(lvl, idx) in getValuesForParameter('venus')" :key="idx" :class="getScaleCSS(lvl)" :style="getScaleStepPosition(lvl)">{{ lvl.strValue }}
+                  <div v-if="lvl.hasBonus() === true" :class="'global-parameter-arrow global-venus-arrow'"></div>
+                  <div v-if="lvl.hasBonus() === true" :class="lvl.getCssClass()"></div>
+                </div>
             </div>
 
             <div class="global-numbers-oceans">
@@ -366,16 +375,33 @@ import {SpaceId} from '@/common/Types';
 import {TileView} from '@/client/components/board/TileView';
 import {BoardName} from '@/common/boards/BoardName';
 import {LEGENDS} from '@/client/components/Legends';
+import {getGlobalParameterBonus, GlobalParameterBonus} from '@/common/global-parameters/GlobalParameterBonus';
+import {GlobalParameter} from '@/common/global-parameters/GlobalParameter';
 
 class GlobalParamLevel {
+  declare globalParameterBonus: GlobalParameterBonus|undefined;
+
   constructor(
     public value: number,
     public currentStepNumber: number,
     public totalSteps: number,
     public isActive: boolean,
     public strValue: string,
-    public paramName: string,
+    public parameter: GlobalParameter,
   ) {
+    this.globalParameterBonus = getGlobalParameterBonus(this.parameter, this.value);
+  }
+
+  hasBonus(): boolean {
+    return this.globalParameterBonus !== undefined;
+  }
+
+  getCssClass(): string {
+    if (this.globalParameterBonus === undefined) {
+      return '';
+    }
+
+    return `global-parameter-bonus ${this.globalParameterBonus.cssClass}`;
   }
 }
 
@@ -567,7 +593,7 @@ export default Vue.extend({
       }
       throw new Error('Board space not found by id \'' + spaceId + '\'');
     },
-    getValuesForParameter(targetParameter: string): Array<GlobalParamLevel> {
+    getValuesForParameter(targetParameter: GlobalParameter|string): Array<GlobalParamLevel> {
       const values:Array<GlobalParamLevel> = [];
       let startValue: number;
       let endValue: number;
@@ -604,7 +630,7 @@ export default Vue.extend({
         strValue = (targetParameter === 'temperature' && value > 0) ? '+'+value : value.toString();
         currentStepNumber = ((value - startValue) / step);
         values.push(
-          new GlobalParamLevel(value, currentStepNumber, totalSteps, value === curValue, strValue, targetParameter),
+          new GlobalParamLevel(value, currentStepNumber, totalSteps, value === curValue, strValue, targetParameter as GlobalParameter),
         );
       }
       return values;
@@ -612,7 +638,7 @@ export default Vue.extend({
     // Return the inline style to position this param level on the page
     // dynamically through the helper GlobalTrackDisplay class
     getScaleStepPosition(paramLevel: GlobalParamLevel): object {
-      const targetParameter = paramLevel.paramName;
+      const targetParameter = paramLevel.parameter;
 
       // Static values needed to drive the positioning along this track
       let leftStart: number;

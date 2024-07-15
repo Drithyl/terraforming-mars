@@ -43,7 +43,7 @@ import {MoonExpansion} from './moon/MoonExpansion';
 import {IStandardProjectCard} from './cards/IStandardProjectCard';
 import {ConvertPlants} from './cards/base/standardActions/ConvertPlants';
 import {ConvertHeat} from './cards/base/standardActions/ConvertHeat';
-import {GlobalParameter} from '../common/GlobalParameter';
+import {GlobalParameter} from '../common/global-parameters/GlobalParameter';
 import {LogHelper} from './LogHelper';
 import {UndoActionOption} from './inputs/UndoActionOption';
 import {Turmoil} from './turmoil/Turmoil';

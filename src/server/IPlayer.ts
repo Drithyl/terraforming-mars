@@ -17,7 +17,7 @@ import {Timer} from '../common/Timer';
 import {AllOptions, DrawOptions} from './deferredActions/DrawCards';
 import {Units} from '../common/Units';
 import {IStandardProjectCard} from './cards/IStandardProjectCard';
-import {GlobalParameter} from '../common/GlobalParameter';
+import {GlobalParameter} from '../common/global-parameters/GlobalParameter';
 import {GlobalEventName} from '../common/turmoil/globalEvents/GlobalEventName';
 import {InputResponse} from '../common/inputs/InputResponse';
 import {Tags} from './player/Tags';

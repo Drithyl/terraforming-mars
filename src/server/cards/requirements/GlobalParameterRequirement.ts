@@ -1,6 +1,6 @@
 import {IPlayer} from '../../IPlayer';
 import {InequalityRequirement} from './InequalityRequirement';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {YesAnd} from './CardRequirement';
 
 

@@ -7,7 +7,7 @@ import {Tag} from '../../common/cards/Tag';
 import {CardResource} from '../../common/CardResource';
 import {CardName} from '../../common/cards/CardName';
 import {CardMetadata} from '../../common/cards/CardMetadata';
-import {GlobalParameter} from '../../common/GlobalParameter';
+import {GlobalParameter} from '../../common/global-parameters/GlobalParameter';
 import {BoardType} from '../boards/BoardType';
 import {CardDiscount} from '../../common/cards/Types';
 import {IVictoryPoints} from '../../common/cards/IVictoryPoints';

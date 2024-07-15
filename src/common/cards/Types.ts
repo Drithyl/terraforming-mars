@@ -1,4 +1,4 @@
-import {GlobalParameter} from '../GlobalParameter';
+import {GlobalParameter} from '../global-parameters/GlobalParameter';
 import {Tag} from './Tag';
 
 /**

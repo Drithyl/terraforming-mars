@@ -11,7 +11,7 @@ import {MoonModel} from './MoonModel';
 import {PathfindersModel} from './PathfindersModel';
 import {SpectatorId} from '../Types';
 import {ColonyName} from '../colonies/ColonyName';
-import {GlobalParameter} from '../GlobalParameter';
+import {GlobalParameter} from '../global-parameters/GlobalParameter';
 
 // Common data about a game not assocaited with a player (eg the temperature.)
 export type GameModel = {

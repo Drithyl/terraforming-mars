@@ -31,7 +31,7 @@ import {CorporationDeck, PreludeDeck, ProjectDeck, CeoDeck} from './cards/Deck';
 import {Tag} from '../common/cards/Tag';
 import {Tile} from './Tile';
 import {Logger} from './logs/Logger';
-import {GlobalParameter} from '../common/GlobalParameter';
+import {GlobalParameter} from '../common/global-parameters/GlobalParameter';
 import {UnderworldData} from './underworld/UnderworldData';
 
 export interface Score {

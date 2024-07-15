@@ -1,6 +1,6 @@
 import {IPlayer} from '../../IPlayer';
 import {GlobalParameterRequirement} from './GlobalParameterRequirement';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {RequirementType} from '../../../common/cards/RequirementType';
 import {MAX_VENUS_SCALE, MIN_VENUS_SCALE} from '../../../common/constants';
 import {Options} from './CardRequirement';

@@ -1,7 +1,7 @@
 import {IPlayer} from '../../IPlayer';
 import {MoonExpansion} from '../../moon/MoonExpansion';
 import {GlobalParameterRequirement} from './GlobalParameterRequirement';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {RequirementType} from '../../../common/cards/RequirementType';
 
 /**

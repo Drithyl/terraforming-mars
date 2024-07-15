@@ -1,6 +1,6 @@
 import {IPlayer} from '../../IPlayer';
 import {GlobalParameterRequirement} from './GlobalParameterRequirement';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {RequirementType} from '../../../common/cards/RequirementType';
 import {MAX_TEMPERATURE, MIN_TEMPERATURE} from '../../../common/constants';
 import {Options} from './CardRequirement';

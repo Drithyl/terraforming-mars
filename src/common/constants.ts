@@ -12,6 +12,10 @@ export const OCEAN_BONUS = 2;
 export const ORIGINAL_EQUATOR_LENGTH = 9;
 
 // Global parameters
+export const OXYGEN_STEP = 1;
+export const TEMPERATURE_STEP = 2;
+export const VENUS_STEP = 2;
+
 export const HEAT_FOR_TEMPERATURE = 8;
 export const MAX_OCEAN_TILES = 9;
 export const MAX_TEMPERATURE = 8;

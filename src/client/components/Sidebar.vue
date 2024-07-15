@@ -78,7 +78,7 @@ import GameSetupDetail from '@/client/components/GameSetupDetail.vue';
 import {GameOptionsModel} from '@/common/models/GameOptionsModel';
 import GlobalParameterValue from '@/client/components/GlobalParameterValue.vue';
 import MoonGlobalParameterValue from '@/client/components/moon/MoonGlobalParameterValue.vue';
-import {GlobalParameter} from '@/common/GlobalParameter';
+import {GlobalParameter} from '@/common/global-parameters/GlobalParameter';
 import {MoonModel} from '@/common/models/MoonModel';
 import PreferencesIcon from '@/client/components/PreferencesIcon.vue';
 import LanguageIcon from '@/client/components/LanguageIcon.vue';

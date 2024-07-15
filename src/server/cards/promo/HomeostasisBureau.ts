@@ -6,7 +6,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {Tag} from '../../../common/cards/Tag';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 
 export class HomeostasisBureau extends Card implements IProjectCard {
   constructor() {

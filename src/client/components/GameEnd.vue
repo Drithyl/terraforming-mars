@@ -208,7 +208,7 @@ import {SpectatorModel} from '@/common/models/SpectatorModel';
 import {Color} from '@/common/Color';
 import {CardType} from '@/common/cards/CardType';
 import {getCard} from '@/client/cards/ClientCardManifest';
-import {GlobalParameter} from '@/common/GlobalParameter';
+import {GlobalParameter} from '@/common/global-parameters/GlobalParameter';
 import {$t, translateTextWithParams, translateMessage} from '@/client/directives/i18n';
 import {Message} from '@/common/logs/Message';
 import {LogMessageDataType} from '@/common/logs/LogMessageDataType';

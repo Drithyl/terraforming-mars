@@ -2,7 +2,7 @@ import {CorporationCard} from '../corporation/CorporationCard';
 import {Tag} from '../../../common/cards/Tag';
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 
 export class MorningStarInc extends CorporationCard {
   constructor() {

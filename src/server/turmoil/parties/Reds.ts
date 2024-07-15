@@ -12,7 +12,7 @@ import {RemoveOceanTile} from '../../deferredActions/RemoveOceanTile';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
 import {MoonExpansion} from '../../moon/MoonExpansion';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {TITLES} from '../../inputs/titles';
 
 export class Reds extends Party implements IParty {

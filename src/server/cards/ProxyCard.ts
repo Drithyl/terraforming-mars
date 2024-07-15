@@ -4,7 +4,7 @@ import {CardMetadata} from '../../common/cards/CardMetadata';
 import {Tag} from '../../common/cards/Tag';
 import {IProjectCard} from './IProjectCard';
 import {IPlayer} from '../IPlayer';
-import {GlobalParameter} from '../../common/GlobalParameter';
+import {GlobalParameter} from '../../common/global-parameters/GlobalParameter';
 import {Warning} from '../../common/cards/Warning';
 
 const EMPTY_SET: Readonly<Set<Warning>> = new Set();

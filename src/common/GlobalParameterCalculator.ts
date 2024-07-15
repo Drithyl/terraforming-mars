@@ -139,9 +139,9 @@ export function getMaxTemperature(gameOrOptions: any, players?: Array<IPlayer>):
 
   // One more ocean for each player
   if (players !== undefined) {
-    return constants.MAX_TEMPERATURE + players.length;
+    return constants.MAX_TEMPERATURE + (players.length * constants.TEMPERATURE_STEP);
   } else {
-    return constants.MAX_TEMPERATURE + gameOrOptions.getPlayers().length;
+    return constants.MAX_TEMPERATURE + (gameOrOptions.getPlayers().length * constants.TEMPERATURE_STEP);
   }
 }
 
@@ -161,9 +161,9 @@ export function getMaxOxygenLevel(gameOrOptions: any, players?: Array<IPlayer>):
   }
 
   if (players !== undefined) {
-    return constants.MAX_OXYGEN_LEVEL + players.length;
+    return constants.MAX_OXYGEN_LEVEL + (players.length * constants.OXYGEN_STEP);
   } else {
-    return constants.MAX_OXYGEN_LEVEL + gameOrOptions.getPlayers().length;
+    return constants.MAX_OXYGEN_LEVEL + (gameOrOptions.getPlayers().length * constants.OXYGEN_STEP);
   }
 }
 
@@ -183,9 +183,9 @@ export function getMaxVenusScale(gameOrOptions: any, players?: Array<IPlayer>): 
   }
 
   if (players !== undefined) {
-    return constants.MAX_VENUS_SCALE + players.length;
+    return constants.MAX_VENUS_SCALE + (players.length * constants.VENUS_STEP);
   } else {
-    return constants.MAX_VENUS_SCALE + gameOrOptions.getPlayers().length;
+    return constants.MAX_VENUS_SCALE + (gameOrOptions.getPlayers().length * constants.VENUS_STEP);
   }
 }
 

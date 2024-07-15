@@ -6,7 +6,7 @@ import {CeoCard} from './CeoCard';
 
 import {IProjectCard} from '../IProjectCard';
 import {Tag} from '../../../common/cards/Tag';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 
 export class Rogers extends CeoCard {
   constructor() {

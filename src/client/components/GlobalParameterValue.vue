@@ -15,7 +15,7 @@
 <script lang="ts">
 
 import Vue from 'vue';
-import {GlobalParameter} from '@/common/GlobalParameter';
+import {GlobalParameter} from '@/common/global-parameters/GlobalParameter';
 
 // This component is only configured for offial global parameters, and not the moon global parameters.
 type BaseGlobalParameter = Exclude<

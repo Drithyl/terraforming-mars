@@ -1,7 +1,7 @@
 import {IPlayer} from '../../IPlayer';
 import {GlobalParameterRequirement} from './GlobalParameterRequirement';
 import {MAX_OCEAN_TILES} from '../../../common/constants';
-import {GlobalParameter} from '../../../common/GlobalParameter';
+import {GlobalParameter} from '../../../common/global-parameters/GlobalParameter';
 import {RequirementType} from '../../../common/cards/RequirementType';
 import {Options} from './CardRequirement';
 

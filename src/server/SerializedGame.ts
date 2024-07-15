@@ -16,7 +16,7 @@ import {SerializedPathfindersData} from './pathfinders/SerializedPathfindersData
 import {SerializedDeck} from './cards/SerializedDeck';
 import {UnderworldData} from './underworld/UnderworldData';
 import {AwardName} from '../common/ma/AwardName';
-import {GlobalParameter} from '../common/GlobalParameter';
+import {GlobalParameter} from '../common/global-parameters/GlobalParameter';
 
 export type SerializedGame = {
     activePlayer: PlayerId;
