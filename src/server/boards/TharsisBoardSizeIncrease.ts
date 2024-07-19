@@ -1,9 +1,12 @@
 import {Random} from '../../common/utils/Random';
 import {BoardBuilder} from './BoardBuilder';
 import {RandomSpaceBonusPossibilities, SpaceBonus} from '../../common/boards/SpaceBonus';
-import {SpaceType} from '../../common/boards/SpaceType';
+import RandomSpaceTypes from '../../common/boards/RandomSpaceTypes';
 
-const RANDOM_SPACE_TYPES = [SpaceType.LAND, SpaceType.OCEAN];
+const RANDOM_SPACE_TYPES = new RandomSpaceTypes()
+  .land(80)
+  .ocean(20);
+
 const RANDOM_BONUSES: RandomSpaceBonusPossibilities = new RandomSpaceBonusPossibilities(
   {
     type: null,

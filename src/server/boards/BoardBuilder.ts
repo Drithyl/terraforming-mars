@@ -7,6 +7,7 @@ import {Random} from '../../common/utils/Random';
 import {inplaceShuffle} from '../utils/shuffle';
 import {randomFromArray} from '../../common/utils/utils';
 import {ORIGINAL_EQUATOR_LENGTH} from '../../common/constants';
+import RandomSpaceTypes from '@/common/boards/RandomSpaceTypes';
 
 function colonySpace(id: SpaceId): Space {
   return {id, spaceType: SpaceType.COLONY, x: -1, y: -1, bonus: []};
@@ -73,7 +74,7 @@ export class BoardBuilder {
    * @param possibleRandomTerrains - a list of the terrains that can be included in the padded spaces
    * @param possibleRandomBonuses - a list of the bonuses that can be generated in the padded spaces
    */
-  padRandom(rng: Random, padding: number, possibleRandomTerrains: Array<SpaceType>, possibleRandomBonuses: RandomSpaceBonusPossibilities) {
+  padRandom(rng: Random, padding: number, possibleRandomTerrains: RandomSpaceTypes, possibleRandomBonuses: RandomSpaceBonusPossibilities) {
     // Store the original size of the board (the number of rows is equal to the number of tiles in the equator)
     const originalNumberOfRows = this.equatorLength;
 
@@ -106,18 +107,23 @@ export class BoardBuilder {
       if (row < padding) {
         // ...generate all of its tiles as random ones, since this row did not exist in the original size
         for (let i = 0; i < tilesInThisRow; i++) {
-          this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+          this.spaceTypes.push(possibleRandomTerrains.generate(rng));
+          this.bonuses.push(possibleRandomBonuses.pickRandom(rng));
         }
       // If this row is within the original number of rows...
       } else if (row >= padding && row < padding + originalNumberOfRows) {
         // ...iterate through all the tiles this row will now have, padding included
         for (let i = 0; i < tilesInThisRow; i++) {
           // If this tile is part of the padding, randomize the tile
-          if (i < padding) this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
-          else if (i >= tilesInThisRow - padding) this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
-          // If the tile is not the padding at the front or back, then it's a tile that existed in the original board.
-          // Extract it from the original structures and add it to our new list of spaces and bonuses
-          else {
+          if (i < padding) {
+            this.spaceTypes.push(possibleRandomTerrains.generate(rng));
+            this.bonuses.push(possibleRandomBonuses.pickRandom(rng));
+          } else if (i >= tilesInThisRow - padding) {
+            this.spaceTypes.push(possibleRandomTerrains.generate(rng));
+            this.bonuses.push(possibleRandomBonuses.pickRandom(rng));
+          } else {
+            // If the tile is not the padding at the front or back, then it's a tile that existed in the original board.
+            // Extract it from the original structures and add it to our new list of spaces and bonuses
             this.spaceTypes.push(...originalSpaceTypes.splice(0, 1));
             this.bonuses.push(...originalBonuses.splice(0, 1));
           }
@@ -126,7 +132,8 @@ export class BoardBuilder {
       } else {
         // Generate all of its tiles as random ones, since this row did not exist in the original size
         for (let i = 0; i < tilesInThisRow; i++) {
-          this.randomTerrain(rng, possibleRandomTerrains, ...possibleRandomBonuses.pickRandom(rng));
+          this.spaceTypes.push(possibleRandomTerrains.generate(rng));
+          this.bonuses.push(possibleRandomBonuses.pickRandom(rng));
         }
       }
     }
