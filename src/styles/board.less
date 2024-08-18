@@ -5,6 +5,10 @@
 	position: relative;
 	top: 1%;
 	left: 1%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .board-debug {
@@ -71,10 +75,16 @@
 // }
 
 .board-legend {
-	position: absolute;
-	margin: -67px 0 0 -100px;
 	z-index: 5;
-	pointer-events: none
+	pointer-events: none;
+
+	flex: 0 0 auto;
+	width: 113%;
+	height: 100%;
+}
+
+.board-legend-label {
+	
 }
 
 .board-caption {

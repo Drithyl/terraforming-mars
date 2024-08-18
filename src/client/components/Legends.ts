@@ -1,13 +1,37 @@
 import {BoardName} from '@/common/boards/BoardName';
+import {Position, calculateTilePosition} from './board/BoardSpaceTilePosition';
 
-export type Key = {
-  position: [number, number],
-  text: [string, string],
-  line?: {from: [number, number], to: [number, number]},
-  secondRowX?: number,
+export type TileLegendData = {
+  text: Array<string>,
+  target: {row: number, col: number},
+}
+
+export type TileLegend = {
+  text: Array<string>,
+  labelPosition: Position,
+  textPosition: Position,
+  linePosition: { start: Position, end: Position }
+}
+
+const LEGENDS_DATA: { [boardName: string]: Array<TileLegendData> } = {
+  [BoardName.THARSIS]: [
+    {
+      text: ['Testest', 'City'],
+      target: {row: 0, col: 0},
+    },
+  ],
+  [BoardName.HELLAS]: [],
+  [BoardName.ELYSIUM]: [],
+  [BoardName.ARABIA_TERRA]: [],
+  [BoardName.UTOPIA_PLANITIA]: [],
+  [BoardName.VASTITAS_BOREALIS_NOVUS]: [],
+  [BoardName.VASTITAS_BOREALIS]: [],
+  [BoardName.AMAZONIS]: [],
+  [BoardName.TERRA_CIMMERIA]: [],
+  [BoardName.TERRA_CIMMERIA_NOVUS]: [],
 };
 
-export const LEGENDS: Record<BoardName, Array<Key>> = {
+const LEGENDS: { [boardName: string]: Array<TileLegend> } = {
   [BoardName.THARSIS]: [],
   [BoardName.HELLAS]: [],
   [BoardName.ELYSIUM]: [],
@@ -17,11 +41,91 @@ export const LEGENDS: Record<BoardName, Array<Key>> = {
   [BoardName.VASTITAS_BOREALIS]: [],
   [BoardName.AMAZONIS]: [],
   [BoardName.TERRA_CIMMERIA]: [],
-  [BoardName.TERRA_CIMMERIA_NOVUS]: [
-    {text: ['Albor', 'Tholius'], position: [282, 83], line: {from: [28, 18], to: [42, 27]}},
-    {text: ['MSL', 'Curiosity'], position: [120, 185], line: {from: [30, 0], to: [148, 10]}, secondRowX: -15},
-    {text: ['Tyrrhenus', 'Mons'], position: [85, 225], line: {from: [40, 5], to: [65, 10]}},
-    {text: ['Apollinaris', 'Mons'], position: [500, 205], line: {from: [-3, 6], to: [-50, 28]}},
-    {text: ['Hadriacus', 'Mons'], position: [90, 365], line: {from: [48, -7], to: [63, -18]}},
-  ],
+  [BoardName.TERRA_CIMMERIA_NOVUS]: [],
 };
+
+export function parseLegendsData(equatorLength: number): { [boardName: string]: Array<TileLegend> } {
+  for (const boardName in LEGENDS_DATA) {
+    if (Object.prototype.hasOwnProperty.call(LEGENDS_DATA, boardName)) {
+      const boardLegendData = LEGENDS_DATA[boardName];
+
+      boardLegendData.forEach((legendData) => {
+        // const halfEquator = Math.floor(equatorLength);
+        const labelPosition = getLabelPositionAtRowStart(legendData.target.row, equatorLength);
+        const textPosition = getLabelTextPosition(labelPosition);
+        const linePosition = getLabelLinePosition(labelPosition);
+        const parsedLabel = {
+          text: legendData.text,
+          labelPosition,
+          textPosition,
+          linePosition,
+        };
+
+        LEGENDS[boardName].push(parsedLabel);
+      });
+    }
+  }
+
+  return LEGENDS;
+}
+
+export function getLabelPositionAtRowStart(tileRow: number, equatorLength: number): Position {
+  const yRelativeToEquator = Math.floor(equatorLength / 2) - tileRow;
+  const tilePosition = calculateTilePosition(0, yRelativeToEquator, equatorLength);
+
+  return {
+    x: (tilePosition.x ) - 6,
+    y: tilePosition.y - 0.5,
+  };
+}
+
+export function getLabelPositionAtRowEnd(tileRow: number, equatorLength: number): Position {
+  const yRelativeToEquator = Math.floor(equatorLength / 2) - tileRow;
+  const lastRowTile = equatorLength - yRelativeToEquator;
+  const tilePosition = calculateTilePosition(lastRowTile, yRelativeToEquator, equatorLength);
+
+  return {
+    x: (tilePosition.x ) + 6,
+    y: tilePosition.y - 0.5,
+  };
+}
+
+export function getLabelPositionAtColStart(tileRow: number, equatorLength: number): Position {
+  const yRelativeToEquator = Math.floor(equatorLength / 2);
+  const tilePosition = calculateTilePosition(tileRow, yRelativeToEquator, equatorLength);
+
+  return {
+    x: (tilePosition.x ),
+    y: tilePosition.y - 6,
+  };
+}
+
+export function getLabelPositionAtColEnd(tileRow: number, equatorLength: number): Position {
+  const yRelativeToEquator = Math.floor(equatorLength / 2);
+  const tilePosition = calculateTilePosition(tileRow, yRelativeToEquator, equatorLength);
+
+  return {
+    x: (tilePosition.x ),
+    y: tilePosition.y + 6,
+  };
+}
+
+export function getLabelTextPosition(labelPosition: Position): Position {
+  return {
+    x: labelPosition.x,
+    y: 1.2,
+  };
+}
+
+export function getLabelLinePosition(labelPosition: Position): {start: Position, end: Position} {
+  return {
+    start: {
+      x: labelPosition.x + 10,
+      y: labelPosition.y + 0.6,
+    },
+    end: {
+      x: 50,
+      y: 50,
+    },
+  };
+}

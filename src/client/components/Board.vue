@@ -92,70 +92,26 @@
               :key="curSpace.id"
               :space="curSpace"
               :equatorLength="equatorLength"
+              :increaseBoardSize="increaseBoardSize"
               :aresExtension="aresExtension"
               :tileView="tileView"
               data-test="board-space"
             />
 
-            <svg id="board_legend" height="550" width="630" class="board-legend">
-              <g v-for="(key, idx) of LEGENDS[boardName]" :key="idx" :transform="`translate(${key.position[0]}, ${key.position[1]})`">
+            <svg v-for="(tileLegend, idx) of getBoardLegends()" class="board-legend-label" :key="idx" :transform="`translate(${tileLegend.labelPosition.x}%, ${tileLegend.labelPosition.y}%)`">
+              <g>
                 <text class="board-caption">
-                  <tspan y="0">{{key.text[0]}}</tspan>
-                  <tspan :x="key.secondRowX || 0" y="1.1em">{{key.text[1]}}</tspan>
+                  <tspan>{{tileLegend.text[0]}}</tspan>
+                  <tspan :x="tileLegend.textPosition.x" :dy="`${tileLegend.textPosition.y}em`">{{tileLegend.text[1]}}</tspan>
                 </text>
-                <template v-if="key.line !== undefined">
-                  <line :x1="key.line.from[0]" :y1="key.line.from[1]" :x2="key.line.to[0]" :y2="key.line.to[1]" class="board-line"></line>
-                  <circle :cx="key.line.to[0]" :cy="key.line.to[1]" r="2" class="board-caption board_caption--black"/>
+                <template v-if="tileLegend.linePosition !== undefined">
+                  <line :x1="tileLegend.linePosition.start.x" :y1="tileLegend.linePosition.start.y" :x2="tileLegend.linePosition.end.x" :y2="tileLegend.linePosition.end.y" class="board-line"></line>
+                  <circle :x="tileLegend.linePosition.end.x" :y="tileLegend.linePosition.end.y" r="2" class="board-caption board_caption--black"/>
                 </template>
               </g>
+            </svg>
 
-              <template v-if="boardName === BoardName.THARSIS">
-                  <g id="ascraeus_mons" transform="translate(95, 192)">
-                      <text class="board-caption">
-                          <tspan dy="15">Ascraeus</tspan>
-                          <tspan x="12" dy="12">Mons</tspan>
-                      </text>
-                      <line x1="38" y1="20" x2="88" y2="26" class="board-line"></line>
-                      <text x="86" y="29" class="board-caption board_caption--black">●</text>
-                  </g>
-
-                  <g id="pavonis_mons" transform="translate(90, 230)">
-                      <text class="board-caption">
-                          <tspan dy="15">Pavonis</tspan>
-                          <tspan x="4" dy="12">Mons</tspan>
-                      </text>
-                      <line x1="35" y1="25" x2="72" y2="30" class="board-line" />
-                      <text x="66" y="33" class="board-caption board_caption--black">●</text>
-                  </g>
-
-                  <g id="arsia_mons" transform="translate(77, 275)">
-                      <text class="board-caption">
-                          <tspan dy="15">Arsia</tspan>
-                          <tspan x="-2" dy="12">Mons</tspan>
-                      </text>
-                      <line x1="25" y1="20" x2="49" y2="26" class="board-line" />
-                      <text x="47" y="29" class="board-caption board_caption--black">●</text>
-                  </g>
-
-                  <g id="tharsis_tholus" transform="translate(85, 175)">
-                      <text class="board-caption" dx="47">
-                          <tspan dy="-7">Tharsis</tspan>
-                          <tspan dy="12" x="48">Tholus</tspan>
-                      </text>
-                      <line y1="-3" x2="160" y2="2" class="board-line" x1="90"></line>
-                      <text x="158" y="5" class="board-caption board_caption--black">&#x25cf;</text>
-                  </g>
-
-                  <g id="noctis_city" transform="translate(85, 320)">
-                      <text class="board-caption">
-                          <tspan dy="15">Noctis</tspan>
-                          <tspan x="7" dy="12">City</tspan>
-                      </text>
-                      <line x1="30" y1="20" x2="140" y2="-20" class="board-line"></line>
-                      <text x="136" y="-18" class="board-caption board_caption--black">&#x25cf;</text>
-                  </g>
-              </template>
-
+            <svg id="board_legend" height="550" width="630" class="board-legend">
               <template v-if="boardName === BoardName.ELYSIUM">
                   <g id="elysium_mons" transform="translate(110, 190)">
                       <text class="board-caption">
@@ -374,7 +330,7 @@ import {SpaceType} from '@/common/boards/SpaceType';
 import {SpaceId} from '@/common/Types';
 import {TileView} from '@/client/components/board/TileView';
 import {BoardName} from '@/common/boards/BoardName';
-import {LEGENDS} from '@/client/components/Legends';
+import {parseLegendsData, TileLegend} from '@/client/components/Legends';
 import {getGlobalParameterBonus, GlobalParameterBonus} from '@/common/global-parameters/GlobalParameterBonus';
 import {GlobalParameter} from '@/common/global-parameters/GlobalParameter';
 
@@ -515,6 +471,9 @@ export default Vue.extend({
     equatorLength: {
       type: Number,
     },
+    increaseBoardSize: {
+      type: Number,
+    },
     venusNextExtension: {
       type: Boolean,
     },
@@ -584,6 +543,9 @@ export default Vue.extend({
       return boardSpaces.filter((s: SpaceModel) => {
         return s.spaceType !== SpaceType.COLONY;
       });
+    },
+    getBoardLegends(): TileLegend[] {
+      return parseLegendsData(this.equatorLength)[this.boardName];
     },
     getSpaceById(spaceId: SpaceId): SpaceModel {
       for (const space of this.spaces) {
@@ -733,9 +695,7 @@ export default Vue.extend({
     BoardName(): typeof BoardName {
       return BoardName;
     },
-    LEGENDS(): typeof LEGENDS {
-      return LEGENDS;
-    },
   },
 });
 </script>
+@/client/components/board/BoardSpaceCss

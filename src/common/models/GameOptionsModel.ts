@@ -22,6 +22,7 @@ export type GameOptionsModel = {
   fastModeOption: boolean,
   includeFanMA: boolean,
   includeVenusMA: boolean,
+  increaseBoardSize: number,
   initialDraftVariant: boolean,
   moonExpansion: boolean,
   pathfindersExpansion: boolean,

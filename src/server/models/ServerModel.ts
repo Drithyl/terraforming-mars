@@ -406,6 +406,7 @@ export class Server {
       fastModeOption: options.fastModeOption,
       includeFanMA: options.includeFanMA,
       includeVenusMA: options.includeVenusMA,
+      increaseBoardSize: options.increaseBoardSize,
       initialDraftVariant: options.initialDraftVariant,
       moonExpansion: options.moonExpansion,
       pathfindersExpansion: options.pathfindersExpansion,

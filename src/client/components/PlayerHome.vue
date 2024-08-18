@@ -37,6 +37,7 @@
         <board
           :spaces="game.spaces"
           :equatorLength="game.equatorLength"
+          :increaseBoardSize="game.gameOptions.increaseBoardSize"
           :venusNextExtension="game.gameOptions.venusNextExtension"
           :venusScaleLevel="game.venusScaleLevel"
           :boardName ="game.gameOptions.boardName"
@@ -236,6 +237,7 @@
           <board
             :spaces="game.spaces"
             :equatorLength="game.equatorLength"
+            :increaseBoardSize="game.gameOptions.increaseBoardSize"
             :venusNextExtension="game.gameOptions.venusNextExtension"
             :venusScaleLevel="game.venusScaleLevel"
             :boardName ="game.gameOptions.boardName"
