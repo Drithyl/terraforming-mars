@@ -47,12 +47,6 @@
         <span style="font-size: 14px; margin-left: 10px;" v-i18n>BUY OR DISCARD IT.</span>
       </template>
 
-      <template v-if="colony.name === ColonyName.PLUTO">
-        <span class="white-char" style="margin-left:5px;">+</span>
-        <div class="resource card card-with-border" style="transform: scale(0.8);margin-left:-2px;"></div>
-        <span class="white-char">-</span>
-        <div class="resource card card-with-border" style="transform: scale(0.8);margin-left:-2px;"></div>
-      </template>
 
       <div v-if="colony.name === ColonyName.DEIMOS" class="deimos-colony-bonus">
         <div class="resource money">1</div> / <div class="tile hazard-tile"></div>
